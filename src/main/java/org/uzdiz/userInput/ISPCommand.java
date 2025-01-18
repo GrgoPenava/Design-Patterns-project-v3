@@ -8,7 +8,14 @@ import org.uzdiz.utils.TableBuilder;
 import java.util.List;
 
 
-public class ISPCommand implements Command {
+public class ISPCommand extends CommandHandlerChain {
+
+    @Override
+    protected boolean canHandle(String input) {
+        return input.matches("^ISP(\\s|$).*");
+    }
+
+    @Override
     public void execute(String input) {
         if (!validateInput(input)) {
             ConfigManager.getInstance().incrementErrorCount();

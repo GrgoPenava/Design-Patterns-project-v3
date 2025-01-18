@@ -3,7 +3,12 @@ package org.uzdiz.userInput;
 import org.uzdiz.ConfigManager;
 import org.uzdiz.user.User;
 
-public class DKCommand implements Command {
+public class DKCommand extends CommandHandlerChain {
+
+    @Override
+    protected boolean canHandle(String input) {
+        return input.matches("^DK(\\s|$).*");
+    }
 
     @Override
     public void execute(String input) {

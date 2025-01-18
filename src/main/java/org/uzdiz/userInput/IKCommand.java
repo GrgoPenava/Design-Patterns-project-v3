@@ -8,7 +8,12 @@ import org.uzdiz.builder.Vehicle;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class IKCommand implements Command {
+public class IKCommand extends CommandHandlerChain {
+
+    @Override
+    protected boolean canHandle(String input) {
+        return input.matches("^IK(\\s|$).*");
+    }
 
     @Override
     public void execute(String input) {

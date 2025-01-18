@@ -8,9 +8,15 @@ import org.uzdiz.utils.GraphUtil;
 
 import java.util.*;
 
-public class ISI2SCommand implements Command {
+public class ISI2SCommand extends CommandHandlerChain {
     private GraphUtil graphUtil = new GraphUtil();
 
+    @Override
+    protected boolean canHandle(String input) {
+        return input.matches("^ISI2S(\\s|$).*");
+    }
+
+    @Override
     public void execute(String input) {
         graphUtil.buildGraphFromRailways();
         if (!validateInput(input)) {

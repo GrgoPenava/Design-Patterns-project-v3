@@ -6,7 +6,12 @@ import org.uzdiz.utils.TableBuilder;
 
 import java.util.List;
 
-public class PKCommand implements Command {
+public class PKCommand extends CommandHandlerChain {
+
+    @Override
+    protected boolean canHandle(String input) {
+        return input.matches("^PK(\\s|$).*");
+    }
 
     @Override
     public void execute(String input) {

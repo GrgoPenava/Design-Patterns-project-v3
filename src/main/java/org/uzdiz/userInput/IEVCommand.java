@@ -10,7 +10,12 @@ import org.uzdiz.utils.TableBuilder;
 import java.util.List;
 import java.util.Optional;
 
-public class IEVCommand implements Command {
+public class IEVCommand extends CommandHandlerChain {
+
+    @Override
+    protected boolean canHandle(String input) {
+        return input.matches("^IEV(\\s|$).*");
+    }
 
     @Override
     public void execute(String input) {

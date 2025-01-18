@@ -8,7 +8,12 @@ import org.uzdiz.railwayFactory.Railway;
 
 import java.util.List;
 
-public class IVCommand implements Command {
+public class IVCommand extends CommandHandlerChain {
+
+    @Override
+    protected boolean canHandle(String input) {
+        return input.matches("^IV(\\s|$).*");
+    }
 
     @Override
     public void execute(String input) {

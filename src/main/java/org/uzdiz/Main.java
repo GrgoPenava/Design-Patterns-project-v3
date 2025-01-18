@@ -22,9 +22,7 @@ public class Main {
 
         loadDataFromCsv(config);
 
-        Map<String, Command> commands = new HashMap<>();
-
-        loadCommands(commands, config);
+        CommandHandlerChain commandChain = createCommandChain(config);
 
         Scanner scanner = new Scanner(System.in);
 
@@ -36,18 +34,9 @@ public class Main {
                 break;
             }
 
-            Command command = commands.get(userInput.split(" ")[0]);
-            if (command != null) {
-                CommandExecutor executor = new CommandExecutor(command);
-                executor.executeCommand(userInput);
-            } else {
-                config.incrementErrorCount();
-                System.out.println("Greška br. " + ConfigManager.getInstance().getErrorCount() + ": Nepoznata komanda. Pokušajte ponovno.");
-            }
+            commandChain.handleCommand(userInput);
         }
-
         scanner.close();
-
     }
 
     private static void parseCommandLineArgs(String[] args, ConfigManager config) {
@@ -125,19 +114,36 @@ public class Main {
         drivingDaysReaderCreator.loadData(config.getDrivingDaysFilePath());
     }
 
-    private static void loadCommands(Map<String, Command> commands, ConfigManager configManager) {
-        commands.put("IP", new IPCommand());
-        commands.put("ISP", new ISPCommand());
-        commands.put("ISI2S", new ISI2SCommand());
-        commands.put("IK", new IKCommand());
-        commands.put("IV", new IVCommand());
-        commands.put("IEV", new IEVCommand());
-        commands.put("IVRV", new IVRVCommand());
-        commands.put("DK", new DKCommand());
-        commands.put("PK", new PKCommand());
-        commands.put("IEVD", new IEVDCommand());
-        commands.put("DPK", new DPKCommand());
-        commands.put("SVV", new SVVCommand());
-        commands.put("NOT", new NOTCommand(configManager.getMediator()));
+    private static CommandHandlerChain createCommandChain(ConfigManager configManager) {
+        CommandHandlerChain ipHandler = new IPCommand();
+        CommandHandlerChain ispHandler = new ISPCommand();
+        CommandHandlerChain isi2sHandler = new ISI2SCommand();
+        CommandHandlerChain ikHandler = new IKCommand();
+        CommandHandlerChain ivHandler = new IVCommand();
+        CommandHandlerChain ievHandler = new IEVCommand();
+        CommandHandlerChain ivrvHandler = new IVRVCommand();
+        CommandHandlerChain dkHandler = new DKCommand();
+        CommandHandlerChain pkHandler = new PKCommand();
+        CommandHandlerChain ievdHandler = new IEVDCommand();
+        CommandHandlerChain dpkHandler = new DPKCommand();
+        CommandHandlerChain svvHandler = new SVVCommand();
+        CommandHandlerChain cvpHandler = new CVPCommand();
+        CommandHandlerChain notHandler = new NOTCommand(configManager.getMediator());
+
+        ipHandler.setNextHandler(ispHandler);
+        ispHandler.setNextHandler(isi2sHandler);
+        isi2sHandler.setNextHandler(ikHandler);
+        ikHandler.setNextHandler(ivHandler);
+        ivHandler.setNextHandler(ievHandler);
+        ievHandler.setNextHandler(ivrvHandler);
+        ivrvHandler.setNextHandler(dkHandler);
+        dkHandler.setNextHandler(pkHandler);
+        pkHandler.setNextHandler(ievdHandler);
+        ievdHandler.setNextHandler(dpkHandler);
+        dpkHandler.setNextHandler(svvHandler);
+        svvHandler.setNextHandler(cvpHandler);
+        cvpHandler.setNextHandler(notHandler);
+
+        return ipHandler;
     }
 }

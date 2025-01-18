@@ -5,7 +5,14 @@ import org.uzdiz.railwayFactory.Railway;
 import org.uzdiz.builder.Station;
 import org.uzdiz.utils.TableBuilder;
 
-public class IPCommand implements Command {
+public class IPCommand extends CommandHandlerChain {
+
+    @Override
+    protected boolean canHandle(String input) {
+        return input.matches("^IP(\\s|$).*");
+    }
+
+    @Override
     public void execute(String input) {
         TableBuilder table = new TableBuilder();
         table.setHeaders("Oznaka", "Početna stanica", "Završna stanica", "Duljina (km)");

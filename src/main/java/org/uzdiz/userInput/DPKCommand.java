@@ -5,8 +5,13 @@ import org.uzdiz.timeTableComposite.*;
 import org.uzdiz.user.User;
 import org.uzdiz.ConfigManager;
 
-public class DPKCommand implements Command {
+public class DPKCommand extends CommandHandlerChain {
     private NotificationMediator notificationMediator = ConfigManager.getInstance().getMediator();
+
+    @Override
+    protected boolean canHandle(String input) {
+        return input.matches("^DPK(\\s|$).*");
+    }
 
     @Override
     public void execute(String input) {

@@ -1,14 +1,19 @@
 package org.uzdiz.mediator;
 
 import org.uzdiz.ConfigManager;
-import org.uzdiz.userInput.Command;
+import org.uzdiz.userInput.CommandHandlerChain;
 
-public class NOTCommand implements Command {
+public class NOTCommand extends CommandHandlerChain {
     private NotificationTower notificationTower;
     ConfigManager config = ConfigManager.getInstance();
 
     public NOTCommand(NotificationMediator mediator) {
         this.notificationTower = new NotificationTower(mediator);
+    }
+
+    @Override
+    protected boolean canHandle(String input) {
+        return input.matches("^NOT(\\s|$).*");
     }
 
     @Override

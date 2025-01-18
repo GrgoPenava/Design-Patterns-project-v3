@@ -11,7 +11,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
 
-public class SVVCommand implements Command {
+public class SVVCommand extends CommandHandlerChain {
+
+    @Override
+    protected boolean canHandle(String input) {
+        return input.matches("^SVV(\\s|$).*");
+    }
 
     public List<StationInfo> schedule = new ArrayList<>();
     ConfigManager config = ConfigManager.getInstance();

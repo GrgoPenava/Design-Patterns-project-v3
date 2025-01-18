@@ -11,7 +11,13 @@ import org.uzdiz.utils.TableBuilder;
 
 import java.util.List;
 
-public class IVRVCommand implements Command {
+public class IVRVCommand extends CommandHandlerChain {
+
+    @Override
+    protected boolean canHandle(String input) {
+        return input.matches("^IVRV(\\s|$).*");
+    }
+
     @Override
     public void execute(String input) {
 

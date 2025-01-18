@@ -7,7 +7,12 @@ import org.uzdiz.utils.TableBuilder;
 
 import java.util.*;
 
-public class IEVDCommand implements Command {
+public class IEVDCommand extends CommandHandlerChain {
+
+    @Override
+    protected boolean canHandle(String input) {
+        return input.matches("^IEVD(\\s|$).*");
+    }
 
     @Override
     public void execute(String input) {

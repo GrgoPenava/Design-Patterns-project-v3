@@ -30,6 +30,7 @@ public class ConfigManager {
     private List<TimeTable> timeTables = new ArrayList<>();
     private List<DrivingDays> drivingDays = new ArrayList<>();
     private List<User> users = new ArrayList<>();
+    private TicketPrice ticketPrice = new TicketPrice();
 
     private TimeTableComposite vozniRed;
 
@@ -48,6 +49,26 @@ public class ConfigManager {
             }
         }
         return instance;
+    }
+
+    public static class TicketPrice{
+        private double cijenaNormalni;
+        private double cijenaUbrzani;
+        private double cijenaBrzi;
+        private double popustSuN;
+        private double popustWebMob;
+        private double uvecanjeVlak;
+    }
+
+    public void setPricing(double cijenaNormalni, double cijenaUbrzani, double cijenaBrzi,
+                           double popustSuN, double popustWebMob, double uvecanjeVlak) {
+
+        this.ticketPrice.cijenaNormalni = cijenaNormalni;
+        this.ticketPrice.cijenaUbrzani = cijenaUbrzani;
+        this.ticketPrice.cijenaBrzi = cijenaBrzi;
+        this.ticketPrice.popustSuN = popustSuN;
+        this.ticketPrice.popustWebMob = popustWebMob;
+        this.ticketPrice.uvecanjeVlak = uvecanjeVlak;
     }
 
     public void setStationFilePath(String path) {
