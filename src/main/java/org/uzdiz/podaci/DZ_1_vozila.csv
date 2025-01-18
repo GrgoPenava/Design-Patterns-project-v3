@@ -1,0 +1,37 @@
+﻿Oznaka;Opis;Proizvođač;Godina;Namjena;Vrsta prijevoza;Vrsta pogona;Maks brzina;Maks snaga;Broj sjedećih mjesta;Broj stajaćih mjesta;Broj bicikala;Broj kreveta;Broj automobila;Nosivost;Površina;Zapremina;Status
+D2044-1;DIZELSKA LOKOMOTIVA serije 2 044 „Mala Karavela“ ili „Džems“;Đuro Đaković Hrvatska prema licenci General Motorsa USA ;1981;PSVPVK;N;D;120;1,7;0;0;0;0;0;0;0;0;I
+D2044-2;DIZELSKA LOKOMOTIVA serije 2 044 „Mala Karavela“ ili „Džems“;Đuro Đaković Hrvatska prema licenci General Motorsa USA ;1981;PSVPVK;N;D;120;1,7;0;0;0;0;0;0;0;0;K
+D2044-3;DIZELSKA LOKOMOTIVA serije 2 044 „Mala Karavela“ ili „Džems“;Đuro Đaković Hrvatska prema licenci General Motorsa USA ;1981;PSVPVK;N;D;120;1,7;0;0;0;0;0;0;0;0;K
+D2044-4;DIZELSKA LOKOMOTIVA serije 2 044 „Mala Karavela“ ili „Džems“;Đuro Đaković Hrvatska prema licenci General Motorsa USA ;1981;PSVPVK;N;D;120;1,7;0;0;0;0;0;0;0;0;K
+D2044-5;DIZELSKA LOKOMOTIVA serije 2 044 „Mala Karavela“ ili „Džems“;Đuro Đaković Hrvatska prema licenci General Motorsa USA ;1981;PSVPVK;N;D;120;1,7;0;0;0;0;0;0;0;0;K
+E1142-1;ELEKTRIČNA LOKOMOTIVA serije 1 142 „Brena“ ili „Tiristorka“;Končar Hrvatska;1989;PSVPVK;N;E;160;4;0;0;0;0;0;0;0;0;I
+E1141-1;ELEKTRIČNA LOKOMOTIVA serije 1 141-302…311 „Asea“;Končar Električne lokomotive;2009;PSVPVK;N;E;120;2,6;0;0;0;0;0;0;0;0;I
+PV-1;Elektromotorni putnički vlak;KONČAR – Električna vozila;2024;PSVP;P;E;160;-1;209;222;10;0;0;0;0;0;I
+PV-2;Elektromotorni putnički vlak;KONČAR – Električna vozila;2024;PSVP;P;E;160;-1;209;222;10;0;0;0;0;0;I
+VP-1;Vagon putnički;-;1974;PSBP;P;N;120;-1;100;120;5;0;0;0;0;0;I
+VP-2;Vagon putnički;-;1974;PSBP;P;N;120;-1;100;120;5;0;0;0;0;0;I
+VP-3;Vagon putnički;-;1974;PSBP;P;N;120;-1;100;120;5;0;0;0;0;0;I
+VP-4;Vagon putnički;-;1974;PSBP;P;N;120;-1;100;120;5;0;0;0;0;0;I
+VP-5;Vagon putnički;-;1974;PSBP;P;N;120;-1;100;120;5;0;0;0;0;0;I
+VP-6;Vagon putnički;-;1974;PSBP;P;N;120;-1;100;120;5;0;0;0;0;0;I
+VPR-1;Vagon putnički restoran;-;1974;PSBP;P;N;120;-1;100;120;0;0;0;0;0;0;I
+VPS-1;Vagon putnički za spavanje;-;1974;PSBP;P;N;120;-1;100;120;10;0;0;0;0;0;I
+VTA-1;Vagon teretni za automobile;-;2001;PSBP;TA;N;120;-1;0;0;0;0;10;20;34;0;I
+VTA-2;Vagon teretni za automobile;-;2001;PSBP;TA;N;120;-1;0;0;0;0;10;20;34;0;I
+VTA-3;Vagon teretni za automobile;-;2001;PSBP;TA;N;120;-1;0;0;0;0;10;20;34;0;I
+VTPK-1;Vagon teretni za konejnere;-;2001;PSBP;TK;N;120;-1;0;0;0;0;0;20;53;0;I
+VTPK-2;Vagon teretni za konejnere;-;2001;PSBP;TK;N;120;-1;0;0;0;0;0;20;53;0;I
+VTPK-3;Vagon teretni za konejnere;-;2001;PSBP;TK;N;120;-1;0;0;0;0;0;20;53;0;I
+VTPK-4;Vagon teretni za konejnere;-;2001;PSBP;TK;N;120;-1;0;0;0;0;0;20;53;0;I
+VTPK-5;Vagon teretni za konejnere;-;2001;PSBP;TK;N;120;-1;0;0;0;0;0;20;53;0;I
+VTRSO-1;Vagon teretni za robu u rasutom stanju - otvoreni;-;2010;PSBP;TRS;N;120;-1;0;0;0;0;0;58;35,5;72;I
+VTRSO-2;Vagon teretni za robu u rasutom stanju - otvoreni;-;2010;PSBP;TRS;N;120;-1;0;0;0;0;0;58;35,5;72;I
+VTRSO-3;Vagon teretni za robu u rasutom stanju - otvoreni;-;2010;PSBP;TRS;N;120;-1;0;0;0;0;0;58;35,5;72;I
+VTRSZ-1;Vagon teretni za robu u rasutom stanju - zatvoreni;-;2015;PSBP;TRS;N;120;-1;0;0;0;0;0;26;33;80;I
+VTRSZ-2;Vagon teretni za robu u rasutom stanju - zatvoreni;-;2015;PSBP;TRS;N;120;-1;0;0;0;0;0;26;33;80;I
+VTRSZ-3;Vagon teretni za robu u rasutom stanju - zatvoreni;-;2015;PSBP;TRS;N;120;-1;0;0;0;0;0;57,5;40;105;I
+VTRSZ-4;Vagon teretni za robu u rasutom stanju - zatvoreni;-;2015;PSBP;TRS;N;120;-1;0;0;0;0;0;57,5;40;105;I
+VTRSC-1;Vagon teretni za robu u rasutom stanju - cisterna;-;2020;PSBP;TRS;N;120;-1;0;0;0;0;0;56,5;0;60;I
+VTRSC-2;Vagon teretni za robu u rasutom stanju - cisterna;-;2020;PSBP;TRS;N;120;-1;0;0;0;0;0;56,5;0;60;I
+VTTSC-1;Vagon teretni za robu u tekućem stanju - cisterna;-;2007;PSBP;TTS;N;120;-1;0;0;0;0;0;56;0;60;I
+VTTSC-2;Vagon teretni za robu u tekućem stanju - cisterna;-;2007;PSBP;TTS;N;120;-1;0;0;0;0;0;56;0;60;I

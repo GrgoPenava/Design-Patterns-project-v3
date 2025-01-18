@@ -1,0 +1,97 @@
+﻿Stanica;Oznaka pruge;Vrsta stanice;Status stanice;Putnici ul/iz;Roba ut/ist;Kategorija pruge;Broj perona;Vrsta pruge;Broj kolosjeka;DO po osovini;DO po duznom m;Status pruge;Dužina
+Kotoriba;M501;kol.;O;DA;DA;M;1;K;1;22,5;8,0;I;0
+Donji Mihaljevec;M501;staj.;O;DA;NE;M;1;K;1;22,5;8,0;I;7
+Donji Kraljevec;M501;kol.;O;DA;DA;M;1;K;1;22,5;8,0;I;6
+Čehovec;M501;staj.;O;DA;NE;M;1;K;1;22,5;8,0;I;2
+Mala Subotica;M501;kol.;O;DA;DA;M;1;K;1;22,5;8,0;I;6
+Čakovec-Buzovec;M501;staj.;O;DA;NE;M;2;K;1;22,5;8,0;I;7
+Čakovec;M501;kol.;O;DA;DA;M;2;K;1;22,5;8,0;I;2
+Dunjkovec;M501;staj.;O;DA;NE;M;1;K;1;22,5;8,0;I;4
+Macinec;M501;staj.;O;DA;NE;M;1;K;1;22,5;8,0;I;3
+;;;;;;;;;;;;;
+Mursko Središće;L101;staj.;O;DA;NE;L;1;K;1;20,0;8,0;I;0
+Vratišinec;L101;staj.;O;DA;NE;L;1;K;1;20,0;8,0;I;5
+Novo Selo Rok;L101;staj.;O;DA;NE;L;1;K;1;20,0;8,0;I;5
+Čakovec-Buzovec;L101;staj.;O;DA;NE;L;2;K;1;20,0;8,0;I;5
+Čakovec;L101;kol.;O;DA;DA;L;2;K;1;20,0;8,0;I;2
+;;;;;;;;;;;;;
+Čakovec;R201;kol.;O;DA;DA;R;2;K;1;22,5;8,0;I;0
+Varaždin;R201;kol.;O;DA;DA;R;3;K;1;22,5;8,0;I;11
+Varaždin;R201;kol.;O;DA;DA;R;3;K;1;18,0;6,1;I;0
+Turčin;R201;kol.;O;DA;DA;R;1;K;1;18,0;6,1;I;6
+Krušljevec;R201;staj.;O;DA;NE;R;1;K;1;18,0;6,1;I;5
+Novi Marof;R201;kol.;O;DA;DA;R;1;K;1;18,0;6,1;I;6
+Mađarevo;R201;staj.;O;DA;NE;R;1;K;1;18,0;6,1;I;3
+Podrute;R201;staj.;O;DA;NE;R;1;K;1;18,0;6,1;I;6
+Budinščina;R201;kol.;O;DA;DA;R;1;K;1;18,0;6,1;I;6
+Hrašćina-Trgovišće;R201;staj.;O;DA;NE;R;1;K;1;18,0;6,1;I;3
+Konjščina;R201;kol.;O;DA;DA;R;2;K;1;18,0;6,1;I;7
+Donji Lipovec;R201;staj.;O;DA;NE;R;1;K;1;18,0;6,1;I;3
+Zlatar Bistrica;R201;kol.;O;DA;DA;R;1;K;1;18,0;6,1;I;5
+Poznanovec;R201;staj.;O;DA;NE;R;1;K;1;18,0;6,1;I;4
+Bedekovčina;R201;kol.;O;DA;DA;R;1;K;1;18,0;6,1;I;3
+Bedekovčina;R201;kol.;O;DA;DA;R;1;K;1;20,0;8,0;I;0
+Špičkovina;R201;staj.;O;DA;NE;R;1;K;1;20,0;8,0;I;2
+Dubrava Zabočka;R201;staj.;O;DA;NE;R;1;K;1;20,0;8,0;I;4
+Hum-Lug;R201;rasp.;O;DA;NE;R;1;K;1;20,0;8,0;I;1
+Zabok;R201;kol.;O;DA;NE;R;1;K;1;20,0;8,0;I;2
+Zabok;R201;kol.;O;DA;NE;R;1;K;1;22,5;8,0;I;0
+Veliko Trgovišće;R201;kol.;O;DA;NE;R;1;K;1;22,5;8,0;I;5
+Luka;R201;kol.;O;DA;DA;R;1;K;1;22,5;8,0;I;5
+Kupljenovo;R201;staj.;O;DA;NE;R;1;K;1;22,5;8,0;I;2
+Pojatno;R201;staj.;O;DA;NE;R;1;K;1;22,5;8,0;I;3
+Novi Dvori;R201;kol.;O;DA;NE;R;1;K;1;22,5;8,0;I;4
+Zaprešić;R201;kol.;O;DA;DA;R;2;K;1;22,5;8,0;I;4
+;;;;;;;;;;;;;
+Savski Marof;M101;kol.;O;DA;DA;M;2;E;2;22,5;8,0;I;0
+Brdovec;M101;staj.;O;DA;NE;M;2;E;2;22,5;8,0;I;3
+Zaprešić Savska ;M101;staj.;O;DA;NE;M;2;E;2;22,5;8,0;I;2
+Zaprešić;M101;kol.;O;DA;DA;M;2;E;2;22,5;8,0;I;2
+Podsused Stajalište;M101;staj.;O;DA;NE;M;2;E;2;22,5;8,0;I;4
+Gajnice;M101;staj.;O;DA;NE;M;2;E;2;22,5;8,0;I;3
+Vrapče;M101;staj.;O;DA;NE;M;2;E;2;22,5;8,0;I;1
+Kustošija;M101;staj.;O;DA;NE;M;2;E;2;22,5;8,0;I;3
+Zagreb zapadni kolodvor;M101;kol.;O;DA;DA;M;3;E;2;22,5;8,0;I;2
+Zagreb glavni kolodvor;M101;kol.;O;DA;DA;M;5;E;2;22,5;8,0;I;2
+;;;;;;;;;;;;;
+Varaždin;L201;kol.;O;DA;DA;L;3;K;1;20,0;8,0;I;0
+Vidovec;L201;staj.;O;DA;NE;L;1;K;1;20,0;8,0;I;9
+Cerje Tužno;L201;kol.;O;DA;DA;L;1;K;1;20,0;8,0;I;3
+Stažnjevec;L201;staj.;O;DA;NE;L;1;K;1;20,0;8,0;I;4
+Ivanec;L201;kol.;O;DA;DA;L;1;K;1;20,0;8,0;I;4
+Kuljevčica;L201;staj.;O;DA;NE;L;1;K;1;20,0;8,0;I;2
+Lepoglava;L201;kol.;O;DA;DA;L;1;K;1;20,0;8,0;I;4
+Golubovec;L201;kol.;O;DA;DA;L;1;K;1;20,0;8,0;I;8
+;;;;;;;;;;;;;
+Varaždin;R202;kol.;O;DA;DA;R;3;K;1;22,5;8,0;I;0
+Zbelava;R202;staj.;O;DA;NE;R;1;K;1;22,5;8,0;I;6
+Jalžabet;R202;kol.;O;DA;DA;R;1;K;1;22,5;8,0;I;6
+Novakovec;R202;staj.;O;DA;NE;R;1;K;1;22,5;8,0;I;2
+Martijanec;R202;staj.;O;DA;NE;R;1;K;1;22,5;8,0;I;3
+Ludbreg;R202;kol.;O;DA;DA;R;1;K;1;22,5;8,0;I;6
+Čukovec;R202;staj.;O;DA;NE;R;1;K;1;22,5;8,0;I;5
+Rasinja;R202;kol.;O;DA;DA;R;1;K;1;22,5;8,0;I;5
+Kunovec-Subotica;R202;staj.;O;DA;NE;R;1;K;1;22,5;8,0;I;3
+Koprivnica;R202;kol.;O;DA;DA;R;2;K;1;22,5;8,0;I;
+;;;;;;;;;;;;;
+Koprivnica;M201;kol.;O;DA;DA;M;2;E;1;22,5;8,0;I;0
+Mučna-Reka;M201;kol.;O;DA;NE;M;1;E;1;22,5;8,0;I;7
+Sokolovac;M201;staj.;O;DA;NE;M;1;E;1;22,5;8,0;I;5
+Lepavina;M201;kol.;O;DA;DA;M;1;E;1;22,5;8,0;I;2
+Carevdar;M201;staj.;O;DA;NE;M;1;E;1;22,5;8,0;I;7
+Vojakovački Kloštar;M201;staj.;O;DA;NE;M;1;E;1;22,5;8,0;I;3
+Majurec;M201;staj.;O;DA;NE;M;1;E;1;22,5;8,0;I;3
+Križevci;M201;kol.;O;DA;DA;M;2;E;2;22,5;8,0;I;4
+Repinec;M201;staj.;O;DA;NE;M;2;E;2;22,5;8,0;I;7
+Gradec;M201;kol.;O;NE;DA;M;2;E;2;22,5;8,0;I;5
+Vrbovec;M201;kol.;O;DA;DA;M;2;E;2;22,5;8,0;I;8
+Božjakovina;M201;staj.;O;DA;NE;M;2;E;1;22,5;8,0;I;10
+Dugo Selo;M201;kol.;O;DA;DA;M;2;E;1;22,5;8,0;I;6
+;;;;;;;;;;;;;
+Dugo Selo;M102;kol.;O;DA;DA;M;2;E;2;22,5;8,0;I;0
+Sesvetski Kraljevec;M102;staj.;O;DA;NE;M;2;E;2;22,5;8,0;I;6
+Sesvete;M102;kol.;O;DA;DA;M;2;E;2;22,5;8,0;I;4
+Čulinec;M102;staj.;O;DA;NE;M;2;E;2;22,5;8,0;I;4
+Trnava;M102;staj.;O;DA;NE;M;2;E;2;22,5;8,0;I;1
+Maksimir;M102;staj.;O;DA;NE;M;2;E;2;22,5;8,0;I;1
+Zagreb glavni kolodvor;M102;kol.;O;DA;DA;M;5;E;2;22,5;8,0;I;5
