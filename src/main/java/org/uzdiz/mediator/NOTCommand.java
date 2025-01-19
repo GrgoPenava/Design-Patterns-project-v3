@@ -1,7 +1,7 @@
 package org.uzdiz.mediator;
 
 import org.uzdiz.ConfigManager;
-import org.uzdiz.userInput.CommandHandlerChain;
+import org.uzdiz.userInputChain.CommandHandlerChain;
 
 public class NOTCommand extends CommandHandlerChain {
     private NotificationTower notificationTower;

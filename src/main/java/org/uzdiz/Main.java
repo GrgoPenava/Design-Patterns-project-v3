@@ -2,10 +2,8 @@ package org.uzdiz;
 
 import org.uzdiz.mediator.NOTCommand;
 import org.uzdiz.readerFactory.*;
-import org.uzdiz.userInput.*;
+import org.uzdiz.userInputChain.*;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Scanner;
 
 public class Main {
@@ -129,6 +127,8 @@ public class Main {
         CommandHandlerChain svvHandler = new SVVCommand();
         CommandHandlerChain cvpHandler = new CVPCommand();
         CommandHandlerChain notHandler = new NOTCommand(configManager.getMediator());
+        CommandHandlerChain kkpv2sHandler = new KKPV2SCommand();
+        CommandHandlerChain ikkpvHandler = new IKKPVCommand();
 
         ipHandler.setNextHandler(ispHandler);
         ispHandler.setNextHandler(isi2sHandler);
@@ -143,6 +143,8 @@ public class Main {
         dpkHandler.setNextHandler(svvHandler);
         svvHandler.setNextHandler(cvpHandler);
         cvpHandler.setNextHandler(notHandler);
+        notHandler.setNextHandler(kkpv2sHandler);
+        kkpv2sHandler.setNextHandler(ikkpvHandler);
 
         return ipHandler;
     }

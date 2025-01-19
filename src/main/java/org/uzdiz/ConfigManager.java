@@ -5,6 +5,7 @@ import org.uzdiz.builder.Station;
 import org.uzdiz.builder.TimeTable;
 import org.uzdiz.builder.Vehicle;
 import org.uzdiz.mediator.NotificationMediatorImpl;
+import org.uzdiz.memento.TicketCareTaker;
 import org.uzdiz.railwayFactory.Railway;
 import org.uzdiz.timeTableComposite.TimeTableComposite;
 import org.uzdiz.user.User;
@@ -16,6 +17,7 @@ public class ConfigManager {
     private static volatile ConfigManager instance;
 
     private NotificationMediatorImpl mediator = new NotificationMediatorImpl();
+    private TicketCareTaker ticketCareTaker;
 
     private String stationFilePath;
     private String railwayFilePath;
@@ -38,6 +40,7 @@ public class ConfigManager {
 
     private ConfigManager() {
         this.errorCount = 0;
+        this.ticketCareTaker = new TicketCareTaker();
     }
 
     public static ConfigManager getInstance() {
@@ -52,12 +55,12 @@ public class ConfigManager {
     }
 
     public static class TicketPrice{
-        private double cijenaNormalni;
-        private double cijenaUbrzani;
-        private double cijenaBrzi;
-        private double popustSuN;
-        private double popustWebMob;
-        private double uvecanjeVlak;
+        public double cijenaNormalni;
+        public double cijenaUbrzani;
+        public double cijenaBrzi;
+        public double popustSuN;
+        public double popustWebMob;
+        public double uvecanjeVlak;
     }
 
     public void setPricing(double cijenaNormalni, double cijenaUbrzani, double cijenaBrzi,
@@ -69,6 +72,10 @@ public class ConfigManager {
         this.ticketPrice.popustSuN = popustSuN;
         this.ticketPrice.popustWebMob = popustWebMob;
         this.ticketPrice.uvecanjeVlak = uvecanjeVlak;
+    }
+
+    public TicketCareTaker getTicketCareTaker() {
+        return ticketCareTaker;
     }
 
     public void setStationFilePath(String path) {
@@ -198,5 +205,5 @@ public class ConfigManager {
                 .orElse(null);
     }
 
-
+    public TicketPrice getTicketPrice() {return ticketPrice;}
 }
