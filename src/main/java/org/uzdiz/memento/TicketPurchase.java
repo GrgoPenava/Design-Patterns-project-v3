@@ -19,11 +19,17 @@ public class TicketPurchase {
 
     public void purchaseTicket(String trainNumber, String fromStation, String toStation, LocalDate date, double basePrice, boolean isWeekend, String nacinKupovine, String vrijemePolaska, String vrijemeDolaska) {
         double finalPrice = strategy.calculatePrice(basePrice, isWeekend);
+        double popustIznos = 0;
+
+        if (finalPrice < basePrice) {
+            popustIznos = basePrice - finalPrice;
+        }
+
 
         LocalDateTime currentDateTime = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm");
 
-        TicketDetails ticketDetails = new TicketDetails(trainNumber, fromStation, toStation, date, nacinKupovine, finalPrice, vrijemePolaska, vrijemeDolaska, currentDateTime.format(formatter));
+        TicketDetails ticketDetails = new TicketDetails(trainNumber, fromStation, toStation, date, nacinKupovine, basePrice, vrijemePolaska, vrijemeDolaska, currentDateTime.format(formatter), popustIznos, finalPrice);
 
         originator.setDetails(ticketDetails);
         careTaker.addMemento(originator.saveToMemento());

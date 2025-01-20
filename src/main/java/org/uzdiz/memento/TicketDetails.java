@@ -8,21 +8,25 @@ public class TicketDetails {
     private String odredisnaStanica;
     private LocalDate datum;
     private String nacinKupovine;
-    private Double cijena;
+    private Double izvornaCijena;
     private String vrijemePolaska;
     private String vrijemeDolaska;
     private String vrijemeKupovineKarte;
+    private Double popustiIznos;
+    private Double konacnaCijena;
 
-    public TicketDetails(String oznakaVlaka, String polaznaStanica, String odredisnaStanica, LocalDate datum, String nacinKupovine, Double cijena, String vrijemePolaska, String vrijemeDolaska, String vrijemeKupovineKarte) {
-            this.oznakaVlaka = oznakaVlaka;
-            this.polaznaStanica = polaznaStanica;
-            this.odredisnaStanica = odredisnaStanica;
-            this.datum = datum;
-            this.nacinKupovine = nacinKupovine;
-            this.cijena = cijena;
-            this.vrijemePolaska = vrijemePolaska;
-            this.vrijemeDolaska = vrijemeDolaska;
-            this.vrijemeKupovineKarte = vrijemeKupovineKarte;
+    public TicketDetails(String oznakaVlaka, String polaznaStanica, String odredisnaStanica, LocalDate datum, String nacinKupovine, Double izvornaCijena, String vrijemePolaska, String vrijemeDolaska, String vrijemeKupovineKarte, Double popustiIznos, Double konacnaCijena) {
+        this.oznakaVlaka = oznakaVlaka;
+        this.polaznaStanica = polaznaStanica;
+        this.odredisnaStanica = odredisnaStanica;
+        this.datum = datum;
+        this.nacinKupovine = nacinKupovine;
+        this.izvornaCijena = izvornaCijena;
+        this.vrijemePolaska = vrijemePolaska;
+        this.vrijemeDolaska = vrijemeDolaska;
+        this.vrijemeKupovineKarte = vrijemeKupovineKarte;
+        this.popustiIznos = popustiIznos;
+        this.konacnaCijena = konacnaCijena;
     }
 
     public String getTicketOznakaVlaka() {
@@ -41,8 +45,9 @@ public class TicketDetails {
     public String getNacinKupovine() {
         return nacinKupovine;
     }
-    public Double getCijena() {
-        return cijena;
+
+    public Double getIzvornaCijena() {
+        return izvornaCijena;
     }
     public String getVrijemePolaska() {
         return vrijemePolaska;
@@ -53,5 +58,13 @@ public class TicketDetails {
 
     public String getVrijemeKupovineKarte() {
         return vrijemeKupovineKarte;
+    }
+
+    public Double getPopustiIznos() {
+        return popustiIznos;
+    }
+
+    public Double getKonacnaCijena() {
+        return konacnaCijena;
     }
 }

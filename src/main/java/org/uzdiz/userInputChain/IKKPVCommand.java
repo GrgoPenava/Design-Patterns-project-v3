@@ -23,7 +23,7 @@ public class IKKPVCommand extends CommandHandlerChain {
             }
 
             TableBuilder table = new TableBuilder();
-            table.setHeaders("Redni broj", "Oznaka vlaka", "Polazna stanica", "Odredišna stanica", "Datum", "Način kupovine", "Cijena", "Vrijeme polaska", "Vrijeme dolaska", "Vrijeme kupovine");
+            table.setHeaders("Redni broj", "Oznaka vlaka", "Polazna stanica", "Odredišna stanica", "Datum", "Način kupovine", "Izvorna cijena", "Popust", "Konačna cijena", "Vrijeme polaska", "Vrijeme dolaska", "Vrijeme kupovine");
 
             for (int i = 0; i < careTaker.getMementoList().size(); i++) {
                 TicketMemento memento = careTaker.getMemento(i);
@@ -34,7 +34,9 @@ public class IKKPVCommand extends CommandHandlerChain {
                         memento.getTicketDetails().getOdredisnaStanica(),
                         memento.getTicketDetails().getDatum().toString(),
                         memento.getTicketDetails().getNacinKupovine(),
-                        String.format("%.2f", memento.getTicketDetails().getCijena()),
+                        String.format("%.2f", memento.getTicketDetails().getIzvornaCijena()),
+                        String.format("%.2f", memento.getTicketDetails().getPopustiIznos()),
+                        String.format("%.2f", memento.getTicketDetails().getKonacnaCijena()),
                         memento.getTicketDetails().getVrijemePolaska(),
                         memento.getTicketDetails().getVrijemeDolaska(),
                         memento.getTicketDetails().getVrijemeKupovineKarte()
@@ -61,7 +63,7 @@ public class IKKPVCommand extends CommandHandlerChain {
             TicketMemento memento = careTaker.getMemento(ticketIndex);
 
             TableBuilder table = new TableBuilder();
-            table.setHeaders("Redni broj", "Oznaka vlaka", "Polazna stanica", "Odredišna stanica", "Datum", "Način kupovine", "Cijena", "Vrijeme polaska", "Vrijeme dolaska", "Vrijeme kupovine");
+            table.setHeaders("Redni broj", "Oznaka vlaka", "Polazna stanica", "Odredišna stanica", "Datum", "Način kupovine", "Izvorna cijena", "Popust", "Konačna cijena", "Vrijeme polaska", "Vrijeme dolaska", "Vrijeme kupovine");
             table.addRow(
                     String.valueOf(ticketIndex + 1),
                     memento.getTicketDetails().getTicketOznakaVlaka(),
@@ -69,7 +71,9 @@ public class IKKPVCommand extends CommandHandlerChain {
                     memento.getTicketDetails().getOdredisnaStanica(),
                     memento.getTicketDetails().getDatum().toString(),
                     memento.getTicketDetails().getNacinKupovine(),
-                    String.format("%.2f", memento.getTicketDetails().getCijena()),
+                    String.format("%.2f", memento.getTicketDetails().getIzvornaCijena()),
+                    String.format("%.2f", memento.getTicketDetails().getPopustiIznos()),
+                    String.format("%.2f", memento.getTicketDetails().getKonacnaCijena()),
                     memento.getTicketDetails().getVrijemePolaska(),
                     memento.getTicketDetails().getVrijemeDolaska(),
                     memento.getTicketDetails().getVrijemeKupovineKarte()
