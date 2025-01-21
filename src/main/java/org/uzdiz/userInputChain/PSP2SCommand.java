@@ -1,6 +1,7 @@
 package org.uzdiz.userInputChain;
 
 import org.uzdiz.ConfigManager;
+import org.uzdiz.builder.Station;
 import org.uzdiz.stationState.*;
 import org.uzdiz.timeTableComposite.Etapa;
 import org.uzdiz.timeTableComposite.StationComposite;
@@ -9,6 +10,7 @@ import org.uzdiz.timeTableComposite.Train;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class PSP2SCommand extends CommandHandlerChain {
 
@@ -36,10 +38,21 @@ public class PSP2SCommand extends CommandHandlerChain {
         boolean etapaFound = false;
         boolean anyStationUpdated = false;
 
-        // Dohvaćanje svih stanica s oznakom pruge iz Composite uzorka
-        List<StationComposite> stationsOnRailway = getStationsFromComposite(oznakaPruge);
+        // Odredi stanje na temelju statusa
+        State newState = determineState(status);
+        if (newState == null) {
+            ConfigManager.getInstance().incrementErrorCount();
+            System.out.println("Greška br. " + ConfigManager.getInstance().getErrorCount() +
+                    ": Nepoznati status: '" + status + "'.");
+            return;
+        }
 
-        // Pronalazak indeksa polazne i odredišne stanice u popisu stanica
+        // Dohvaćanje svih stanica s oznakom pruge iz globalnog popisa
+        List<Station> stationsOnRailway = ConfigManager.getInstance().getStations().stream()
+                .filter(station -> oznakaPruge.equals(station.getOznakaPruge()))
+                .collect(Collectors.toList());
+
+        // Pronalazak indeksa polazne i odredišne stanice iz popisa svih stanica na toj pruzi
         int indexPolazna = findStationIndex(stationsOnRailway, polaznaStanica);
         int indexOdredisna = findStationIndex(stationsOnRailway, odredisnaStanica);
 
@@ -50,44 +63,45 @@ public class PSP2SCommand extends CommandHandlerChain {
             return;
         }
 
-        // Određivanje smjera i ciljanih stanica
+        // Osiguravanje ispravnog redoslijeda
         boolean isNormalDirection = indexPolazna < indexOdredisna;
-        List<StationComposite> targetStations = isNormalDirection
-                ? stationsOnRailway.subList(indexPolazna, indexOdredisna + 1)
-                : stationsOnRailway.subList(indexOdredisna, indexPolazna + 1);
-
-        // Odredi stanje na temelju statusa
-        State newState = determineState(status);
-        if (newState == null) {
-            ConfigManager.getInstance().incrementErrorCount();
-            System.out.println("Greška br. " + ConfigManager.getInstance().getErrorCount() +
-                    ": Nepoznati status: '" + status + "'.");
-            return;
+        if (!isNormalDirection) {
+            int temp = indexPolazna;
+            indexPolazna = indexOdredisna;
+            indexOdredisna = temp;
         }
 
-        // Prolaz kroz vlakove i etape za ažuriranje stanja
+        List<Station> targetStations = stationsOnRailway.subList(indexPolazna, indexOdredisna + 1);
+
+        // Prolaz kroz sve vlakove
         for (TimeTableComponent trainComponent : ConfigManager.getInstance().getVozniRed().getChildren()) {
             if (trainComponent instanceof Train train) {
+                // Prolaz kroz sve etape vlaka
                 for (TimeTableComponent etapaComponent : train.getChildren()) {
-                    if (etapaComponent instanceof Etapa etapa && etapa.getOznakaPruge().equals(oznakaPruge)) {
+                    if (etapaComponent instanceof Etapa etapa &&
+                            etapa.getOznakaPruge().equals(oznakaPruge)) {
+
                         etapaFound = true;
+                        List<StationComposite> stationsInEtapa = getMatchingStations(etapa, targetStations);
 
                         // Ažuriranje stanja stanica unutar trenutne etape
-                        for (StationComposite stationComposite : targetStations) {
-                            if (etapa.getChildren().contains(stationComposite)) {
-                                if (stationComposite.getBrojKolosjeka() == 1) {
-                                    stationComposite.setState(0, newState);
-                                } else if (stationComposite.getBrojKolosjeka() == 2) {
-                                    if (isNormalDirection) {
-                                        stationComposite.setState(0, newState); // Normalni smjer
-                                    } else {
-                                        stationComposite.setState(1, newState); // Obrnuti smjer
-                                    }
+                        for (StationComposite stationComposite : stationsInEtapa) {
+                            if (stationComposite.getBrojKolosjeka() == 1) {
+                                stationComposite.setState(0, newState);
+                                System.out.println("Ažurirano stanje stanice: " + stationComposite.getNazivStanice() +
+                                        " na vlak " + train.getOznaka() + " (jedan kolosijek)");
+                            } else if (stationComposite.getBrojKolosjeka() == 2) {
+                                if (isNormalDirection) {
+                                    stationComposite.setState(0, newState); // Normalni smjer
+                                    System.out.println("Ažurirano stanje stanice: " + stationComposite.getNazivStanice() +
+                                            " na vlak " + train.getOznaka() + " (prvi kolosijek)");
+                                } else {
+                                    stationComposite.setState(1, newState); // Obrnuti smjer
+                                    System.out.println("Ažurirano stanje stanice: " + stationComposite.getNazivStanice() +
+                                            " na vlak " + train.getOznaka() + " (drugi kolosijek)");
                                 }
-
-                                System.out.println("Stanica je u kvaru. " + stationComposite.getNazivStanice());
-                                anyStationUpdated = true;
                             }
+                            anyStationUpdated = true;
                         }
                     }
                 }
@@ -110,30 +124,24 @@ public class PSP2SCommand extends CommandHandlerChain {
         }
     }
 
-    private List<StationComposite> getStationsFromComposite(String oznakaPruge) {
-        List<StationComposite> stations = new ArrayList<>();
+    private List<StationComposite> getMatchingStations(Etapa etapa, List<Station> targetStations) {
+        List<StationComposite> result = new ArrayList<>();
+        for (TimeTableComponent stationComponent : etapa.getChildren()) {
+            if (stationComponent instanceof StationComposite stationComposite) {
+                boolean matchesTarget = targetStations.stream()
+                        .anyMatch(targetStation -> targetStation.getNaziv().equals(stationComposite.getNazivStanice()));
 
-        for (TimeTableComponent trainComponent : ConfigManager.getInstance().getVozniRed().getChildren()) {
-            if (trainComponent instanceof Train train) {
-                for (TimeTableComponent etapaComponent : train.getChildren()) {
-                    if (etapaComponent instanceof Etapa etapa &&
-                            etapa.getOznakaPruge().equals(oznakaPruge)) {
-                        for (TimeTableComponent stationComponent : etapa.getChildren()) {
-                            if (stationComponent instanceof StationComposite stationComposite) {
-                                stations.add(stationComposite);
-                            }
-                        }
-                    }
+                if (matchesTarget) {
+                    result.add(stationComposite);
                 }
             }
         }
-
-        return stations;
+        return result;
     }
 
-    private int findStationIndex(List<StationComposite> stations, String stationName) {
+    private int findStationIndex(List<Station> stations, String stationName) {
         for (int i = 0; i < stations.size(); i++) {
-            if (stations.get(i).getNazivStanice().equals(stationName)) {
+            if (stations.get(i).getNaziv().equals(stationName)) {
                 return i;
             }
         }

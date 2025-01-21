@@ -130,6 +130,7 @@ public class Main {
         CommandHandlerChain kkpv2sHandler = new KKPV2SCommand();
         CommandHandlerChain ikkpvHandler = new IKKPVCommand();
         CommandHandlerChain psp2sHandler = new PSP2SCommand();
+        CommandHandlerChain irpsHandlerHandler = new IRPSCommand();
 
         ipHandler.setNextHandler(ispHandler);
         ispHandler.setNextHandler(isi2sHandler);
@@ -147,6 +148,7 @@ public class Main {
         notHandler.setNextHandler(kkpv2sHandler);
         kkpv2sHandler.setNextHandler(ikkpvHandler);
         ikkpvHandler.setNextHandler(psp2sHandler);
+        psp2sHandler.setNextHandler(irpsHandlerHandler);
 
         return ipHandler;
     }

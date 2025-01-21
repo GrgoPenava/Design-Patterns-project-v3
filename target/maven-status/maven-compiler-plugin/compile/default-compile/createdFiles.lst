@@ -44,6 +44,7 @@ org/uzdiz/builder/Composition.class
 org/uzdiz/builder/Vehicle$VehicleBuilder.class
 org/uzdiz/readerFactory/TimeTableReaderCreator.class
 org/uzdiz/stationState/IspravnaState.class
+org/uzdiz/userInputChain/IRPSCommand.class
 org/uzdiz/observer/Subject.class
 org/uzdiz/readerFactory/CompositionReaderCreator.class
 org/uzdiz/mediator/NotificationTower.class
