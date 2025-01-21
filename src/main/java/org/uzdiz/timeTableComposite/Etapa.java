@@ -13,7 +13,7 @@ public class Etapa extends TimeTableComposite {
     private String trajanjeVoznje;
     private String oznakaDana;
     private String smjer;
-    private List<Station> listaStanicaKojeNeVoze = new ArrayList<>();
+    //private List<Station> listaStanicaKojeNeVoze = new ArrayList<>();
 
     public Etapa(String oznaka, String oznakaPruge, String pocetnaStanica, String odredisnaStanica, String vrijemePolaska, String trajanjeVoznje, String oznakaDana, String smjer) {
         super(oznaka);
@@ -78,7 +78,7 @@ public class Etapa extends TimeTableComposite {
         this.oznakaDana = oznakaDana;
     }
 
-    public List<Station> getListaStanicaKojeNeVoze() {
+    /*public List<Station> getListaStanicaKojeNeVoze() {
         return listaStanicaKojeNeVoze;
     }
 
@@ -99,5 +99,5 @@ public class Etapa extends TimeTableComposite {
 
     public void ocistiListuStanica() {
         this.listaStanicaKojeNeVoze.clear();
-    }
+    }*/
 }

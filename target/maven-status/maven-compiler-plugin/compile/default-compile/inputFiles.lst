@@ -36,6 +36,11 @@
 /Users/grgopenava/Programming/gpenava_zadaca_3/src/main/java/org/uzdiz/readerFactory/TimeTableReaderProduct.java
 /Users/grgopenava/Programming/gpenava_zadaca_3/src/main/java/org/uzdiz/readerFactory/VehicleReaderCreator.java
 /Users/grgopenava/Programming/gpenava_zadaca_3/src/main/java/org/uzdiz/readerFactory/VehicleReaderProduct.java
+/Users/grgopenava/Programming/gpenava_zadaca_3/src/main/java/org/uzdiz/stationState/IspravnaState.java
+/Users/grgopenava/Programming/gpenava_zadaca_3/src/main/java/org/uzdiz/stationState/KvarState.java
+/Users/grgopenava/Programming/gpenava_zadaca_3/src/main/java/org/uzdiz/stationState/State.java
+/Users/grgopenava/Programming/gpenava_zadaca_3/src/main/java/org/uzdiz/stationState/TestiranjeState.java
+/Users/grgopenava/Programming/gpenava_zadaca_3/src/main/java/org/uzdiz/stationState/ZatvorenaState.java
 /Users/grgopenava/Programming/gpenava_zadaca_3/src/main/java/org/uzdiz/strategy/BlagajnaStrategy.java
 /Users/grgopenava/Programming/gpenava_zadaca_3/src/main/java/org/uzdiz/strategy/PriceCalculationStrategy.java
 /Users/grgopenava/Programming/gpenava_zadaca_3/src/main/java/org/uzdiz/strategy/TrainStrategy.java

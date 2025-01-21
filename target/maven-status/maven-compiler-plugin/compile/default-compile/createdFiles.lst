@@ -23,6 +23,7 @@ org/uzdiz/builder/Station.class
 org/uzdiz/builder/TimeTable$TimeTableBuilder.class
 org/uzdiz/builder/Station$StationBuilder.class
 org/uzdiz/memento/TicketOriginator.class
+org/uzdiz/stationState/TestiranjeState.class
 org/uzdiz/builder/TimeTable.class
 org/uzdiz/userInputChain/IKKPVCommand.class
 org/uzdiz/Main.class
@@ -30,15 +31,19 @@ org/uzdiz/userInputChain/PSP2SCommand.class
 org/uzdiz/userInputChain/ISPCommand.class
 org/uzdiz/railwayFactory/RegionalRailwayCreator.class
 org/uzdiz/readerFactory/CsvReaderProduct.class
+org/uzdiz/stationState/KvarState.class
+org/uzdiz/stationState/State.class
 org/uzdiz/memento/TicketPurchase.class
 org/uzdiz/ConfigManager$TicketPrice.class
 org/uzdiz/userInputChain/IKCommand.class
 org/uzdiz/timeTableComposite/StationComposite.class
 org/uzdiz/userInputChain/DPKCommand.class
+org/uzdiz/stationState/ZatvorenaState.class
 org/uzdiz/readerFactory/TimeTableReaderProduct.class
 org/uzdiz/builder/Composition.class
 org/uzdiz/builder/Vehicle$VehicleBuilder.class
 org/uzdiz/readerFactory/TimeTableReaderCreator.class
+org/uzdiz/stationState/IspravnaState.class
 org/uzdiz/observer/Subject.class
 org/uzdiz/readerFactory/CompositionReaderCreator.class
 org/uzdiz/mediator/NotificationTower.class

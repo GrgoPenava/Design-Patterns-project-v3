@@ -2,6 +2,8 @@ package org.uzdiz.timeTableComposite;
 
 import org.uzdiz.observer.Observer;
 import org.uzdiz.observer.Subject;
+import org.uzdiz.stationState.IspravnaState;
+import org.uzdiz.stationState.State;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,12 +14,36 @@ public class StationComposite extends TimeTableComponent implements Subject {
     private String status;
     private Integer brojKolosjeka;
     private List<Observer> observers = new ArrayList<>();
+    private List<State> kolosijekStates = new ArrayList<>();
 
     public StationComposite(String nazivStanice, Integer idStanice, String status, Integer brojKolosjeka) {
         this.nazivStanice = nazivStanice;
         this.idStanice = idStanice;
         this.status = status;
         this.brojKolosjeka = brojKolosjeka;
+        for (int i = 0; i < brojKolosjeka; i++) {
+            //TODO promijeniti
+            this.kolosijekStates.add(new IspravnaState());
+        }
+    }
+
+    public void setState(int kolosijekIndex, State state) {
+        if (kolosijekIndex < 0 || kolosijekIndex >= brojKolosjeka) {
+            throw new IllegalArgumentException("Neispravan indeks kolosijeka.");
+        }
+        state.doAction(this);
+        this.kolosijekStates.set(kolosijekIndex, state);
+    }
+
+    public State getState(int kolosijekIndex) {
+        if (kolosijekIndex < 0 || kolosijekIndex >= brojKolosjeka) {
+            throw new IllegalArgumentException("Neispravan indeks kolosijeka.");
+        }
+        return this.kolosijekStates.get(kolosijekIndex);
+    }
+
+    public void setCurrentState(State state) {
+        // Za potrebe stanja radimo s jednim kolosijekom ako je potrebno
     }
 
     @Override
