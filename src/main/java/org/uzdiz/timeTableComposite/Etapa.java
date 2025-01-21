@@ -1,5 +1,10 @@
 package org.uzdiz.timeTableComposite;
 
+import org.uzdiz.builder.Station;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class Etapa extends TimeTableComposite {
     private String oznakaPruge;
     private String pocetnaStanica;
@@ -8,6 +13,7 @@ public class Etapa extends TimeTableComposite {
     private String trajanjeVoznje;
     private String oznakaDana;
     private String smjer;
+    private List<Station> listaStanicaKojeNeVoze = new ArrayList<>();
 
     public Etapa(String oznaka, String oznakaPruge, String pocetnaStanica, String odredisnaStanica, String vrijemePolaska, String trajanjeVoznje, String oznakaDana, String smjer) {
         super(oznaka);
@@ -70,5 +76,28 @@ public class Etapa extends TimeTableComposite {
 
     public void setOznakaDana(String oznakaDana) {
         this.oznakaDana = oznakaDana;
+    }
+
+    public List<Station> getListaStanicaKojeNeVoze() {
+        return listaStanicaKojeNeVoze;
+    }
+
+    public void setListaStanicaKojeNeVoze(Station novaStanica) {
+        boolean exists = false;
+        for (Station s : listaStanicaKojeNeVoze) {
+            if (s.getNaziv().equals(novaStanica.getNaziv())) {
+                exists = true;
+                break;
+            }
+        }
+
+        if (!exists) {
+            System.out.println(novaStanica.getNaziv());
+            this.listaStanicaKojeNeVoze.add(novaStanica);
+        }
+    }
+
+    public void ocistiListuStanica() {
+        this.listaStanicaKojeNeVoze.clear();
     }
 }

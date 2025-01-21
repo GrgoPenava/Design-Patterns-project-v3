@@ -129,6 +129,7 @@ public class Main {
         CommandHandlerChain notHandler = new NOTCommand(configManager.getMediator());
         CommandHandlerChain kkpv2sHandler = new KKPV2SCommand();
         CommandHandlerChain ikkpvHandler = new IKKPVCommand();
+        CommandHandlerChain psp2sHandler = new PSP2SCommand();
 
         ipHandler.setNextHandler(ispHandler);
         ispHandler.setNextHandler(isi2sHandler);
@@ -145,6 +146,7 @@ public class Main {
         cvpHandler.setNextHandler(notHandler);
         notHandler.setNextHandler(kkpv2sHandler);
         kkpv2sHandler.setNextHandler(ikkpvHandler);
+        ikkpvHandler.setNextHandler(psp2sHandler);
 
         return ipHandler;
     }

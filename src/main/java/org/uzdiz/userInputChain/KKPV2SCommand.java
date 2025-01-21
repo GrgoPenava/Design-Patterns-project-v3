@@ -1,7 +1,9 @@
 package org.uzdiz.userInputChain;
 
 import org.uzdiz.ConfigManager;
+import org.uzdiz.DrivingDays;
 import org.uzdiz.builder.Station;
+import org.uzdiz.memento.TicketMemento;
 import org.uzdiz.memento.TicketOriginator;
 import org.uzdiz.memento.TicketPurchase;
 import org.uzdiz.railwayFactory.Railway;
@@ -10,6 +12,7 @@ import org.uzdiz.strategy.PriceCalculationStrategy;
 import org.uzdiz.strategy.TrainStrategy;
 import org.uzdiz.strategy.WebMobileStrategy;
 import org.uzdiz.timeTableComposite.*;
+import org.uzdiz.utils.TableBuilder;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -84,10 +87,37 @@ public class KKPV2SCommand extends CommandHandlerChain{
     }
 
     private void handleTicketPurchase(PriceCalculationStrategy strategy, String oznakaVlaka, String polaznaStanica, String odredisnaStanica, LocalDate datum, double basePrice, boolean isWeekend, String nacinKupovine) {
+        Train train = findTrainByOznaka(ConfigManager.getInstance().getVozniRed(), oznakaVlaka);
+
+        if (!isTravelAllowedForAllStages(train, datum)) {
+            return;
+        }
+
         TicketOriginator originator = new TicketOriginator();
         TicketPurchase purchase = new TicketPurchase(strategy, originator);
 
         purchase.purchaseTicket(oznakaVlaka, polaznaStanica, odredisnaStanica, datum, basePrice, isWeekend, nacinKupovine, stationTimes.get("polazak"), stationTimes.get("dolazak"));
+        TicketMemento memento = ConfigManager.getInstance().getTicketCareTaker().getLastMemento();
+
+        if (memento != null) {
+            TableBuilder table = new TableBuilder();
+            table.setHeaders("Redni broj", "Oznaka vlaka", "Polazna stanica", "Odredišna stanica", "Datum", "Način kupovine", "Izvorna cijena", "Popust", "Konačna cijena", "Vrijeme polaska", "Vrijeme dolaska", "Vrijeme kupovine");
+            table.addRow(
+                    "1", // Redni broj je uvijek 1 jer ispisujemo samo ovu kartu
+                    memento.getTicketDetails().getTicketOznakaVlaka(),
+                    memento.getTicketDetails().getPolaznaStanica(),
+                    memento.getTicketDetails().getOdredisnaStanica(),
+                    memento.getTicketDetails().getDatum().toString(),
+                    memento.getTicketDetails().getNacinKupovine(),
+                    String.format("%.2f", memento.getTicketDetails().getIzvornaCijena()),
+                    String.format("%.2f", memento.getTicketDetails().getPopustiIznos()),
+                    String.format("%.2f", memento.getTicketDetails().getKonacnaCijena()),
+                    memento.getTicketDetails().getVrijemePolaska(),
+                    memento.getTicketDetails().getVrijemeDolaska(),
+                    memento.getTicketDetails().getVrijemeKupovineKarte()
+            );
+            table.build();
+        }
     }
 
     private boolean validateInput(String input) {
@@ -190,7 +220,6 @@ public class KKPV2SCommand extends CommandHandlerChain{
                     }
                 } else {
                     if (findStationIndex(stations, polaznaStanica) <= findStationIndex(stations, odredisnaStanica)) {
-                        System.out.println(findStationIndex(stations, polaznaStanica)+ findStationIndex(stations, odredisnaStanica));
                         smjerValidan = true;
                     }
 
@@ -301,12 +330,10 @@ public class KKPV2SCommand extends CommandHandlerChain{
     private void checkTrainDirection(Train train, String polaznaStanica, String odredisnaStanica) {
         List<String> stationNames = new ArrayList<>();
 
-        // Prolazak kroz sve etape vlaka
         for (TimeTableComponent etapaComponent : train.getChildren()) {
             if (etapaComponent instanceof Etapa) {
                 Etapa etapa = (Etapa) etapaComponent;
 
-                // Iteracija kroz sve stanice unutar children atributa
                 for (TimeTableComponent stationComponent : etapa.getChildren()) {
                     if (stationComponent instanceof StationComposite) {
                         StationComposite station = (StationComposite) stationComponent;
@@ -316,7 +343,6 @@ public class KKPV2SCommand extends CommandHandlerChain{
             }
         }
 
-        // Provjera redoslijeda polazne i odredišne stanice
         int indexPolazna = stationNames.indexOf(polaznaStanica);
         int indexOdredisna = stationNames.indexOf(odredisnaStanica);
 
@@ -330,5 +356,39 @@ public class KKPV2SCommand extends CommandHandlerChain{
             ConfigManager.getInstance().incrementErrorCount();
             System.out.println("Greška br. " + ConfigManager.getInstance().getErrorCount() + ": Vlak ne ide u tom smjeru između stanica " + polaznaStanica + " i " + odredisnaStanica + ".");
         }
+    }
+
+    private boolean isTravelAllowedForAllStages(Train train, LocalDate datum) {
+        List<DrivingDays> drivingDaysList = ConfigManager.getInstance().getDrivingDaysList();
+
+        // Pretvori datum u odgovarajući dan u tjednu
+        String danUTjednu = switch (datum.getDayOfWeek()) {
+            case MONDAY -> "Po";
+            case TUESDAY -> "U";
+            case WEDNESDAY -> "Sr";
+            case THURSDAY -> "Č";
+            case FRIDAY -> "Pe";
+            case SATURDAY -> "Su";
+            case SUNDAY -> "N";
+        };
+
+        // Prođi kroz sve etape vlaka
+        for (TimeTableComponent etapaComponent : train.getChildren()) {
+            if (etapaComponent instanceof Etapa etapa) {
+                // Pronađi DrivingDays koji odgovara oznakaDana
+                DrivingDays matchingDrivingDay = drivingDaysList.stream()
+                        .filter(drivingDay -> drivingDay.getOznaka().equals(etapa.getOznakaDana()))
+                        .findFirst()
+                        .orElse(null);
+
+                if (matchingDrivingDay == null || !matchingDrivingDay.getDays().contains(danUTjednu)) {
+                    System.out.println("Greška: Vlak '" + train.getOznaka() +
+                            "' ne putuje na odabran dan");
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 }

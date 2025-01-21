@@ -17,4 +17,11 @@ public class TicketCareTaker {
     public List<TicketMemento> getMementoList() {
         return ticketHistory;
     }
+
+    public TicketMemento getLastMemento() {
+        if (!ticketHistory.isEmpty()) {
+            return ticketHistory.get(ticketHistory.size() - 1);
+        }
+        return null;
+    }
 }

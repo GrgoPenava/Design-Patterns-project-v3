@@ -26,6 +26,7 @@ org/uzdiz/memento/TicketOriginator.class
 org/uzdiz/builder/TimeTable.class
 org/uzdiz/userInputChain/IKKPVCommand.class
 org/uzdiz/Main.class
+org/uzdiz/userInputChain/PSP2SCommand.class
 org/uzdiz/userInputChain/ISPCommand.class
 org/uzdiz/railwayFactory/RegionalRailwayCreator.class
 org/uzdiz/readerFactory/CsvReaderProduct.class
@@ -43,6 +44,7 @@ org/uzdiz/readerFactory/CompositionReaderCreator.class
 org/uzdiz/mediator/NotificationTower.class
 org/uzdiz/userInputChain/CVPCommand.class
 org/uzdiz/userInputChain/DKCommand.class
+org/uzdiz/userInputChain/KKPV2SCommand$1.class
 org/uzdiz/timeTableComposite/TimeTableComposite.class
 org/uzdiz/mediator/NotificationMediatorImpl.class
 org/uzdiz/readerFactory/CompositionReaderProduct.class

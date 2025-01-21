@@ -278,9 +278,9 @@ public class StationReaderProduct implements CsvReaderProduct {
     }
 
     private boolean validateRailwayStatus(String status) {
-        if (!status.equals("I") && !status.equals("K") && !status.equals("Z")) {
+        if (!status.equals("I") && !status.equals("K") && !status.equals("Z") && !status.equals("T")) {
             ConfigManager.getInstance().incrementErrorCount();
-            System.out.println("Greška br. " + ConfigManager.getInstance().getErrorCount() + ": Status pruge mora biti 'I', 'K' ili 'Z'. '" + status + "' nije podržana vrijednost.");
+            System.out.println("Greška br. " + ConfigManager.getInstance().getErrorCount() + ": Status pruge mora biti 'I', 'K', 'T' ili 'Z'. '" + status + "' nije podržana vrijednost.");
             this.printFileError();
             return false;
         }

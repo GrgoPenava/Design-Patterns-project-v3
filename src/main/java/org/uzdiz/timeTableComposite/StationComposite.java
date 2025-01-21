@@ -9,11 +9,15 @@ import java.util.List;
 public class StationComposite extends TimeTableComponent implements Subject {
     private String nazivStanice;
     private Integer idStanice;
+    private String status;
+    private Integer brojKolosjeka;
     private List<Observer> observers = new ArrayList<>();
 
-    public StationComposite(String nazivStanice, Integer idStanice) {
+    public StationComposite(String nazivStanice, Integer idStanice, String status, Integer brojKolosjeka) {
         this.nazivStanice = nazivStanice;
         this.idStanice = idStanice;
+        this.status = status;
+        this.brojKolosjeka = brojKolosjeka;
     }
 
     @Override
@@ -27,6 +31,18 @@ public class StationComposite extends TimeTableComponent implements Subject {
 
     public String getNazivStanice() {
         return nazivStanice;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Integer getBrojKolosjeka() {
+        return brojKolosjeka;
     }
 
     @Override

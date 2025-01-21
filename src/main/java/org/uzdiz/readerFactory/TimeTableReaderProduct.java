@@ -241,7 +241,7 @@ public class TimeTableReaderProduct implements CsvReaderProduct {
                     }
 
                     if (addStations) {
-                        etapa.add(new StationComposite(currentStation.getNaziv(), currentStation.getId()));
+                        etapa.add(new StationComposite(currentStation.getNaziv(), currentStation.getId(), currentStation.getStatusPruge(), currentStation.getBrojKolosjeka()));
                     }
 
                     if (currentStation.getNaziv().equals(odredisnaStanica)) {
@@ -256,7 +256,7 @@ public class TimeTableReaderProduct implements CsvReaderProduct {
                     }
 
                     if (addStations) {
-                        etapa.add(new StationComposite(currentStation.getNaziv(), currentStation.getId()));
+                        etapa.add(new StationComposite(currentStation.getNaziv(), currentStation.getId(), currentStation.getStatusPruge(), currentStation.getBrojKolosjeka()));
                     }
 
                     if (currentStation.getNaziv().equals(odredisnaStanica)) {
