@@ -33,6 +33,12 @@ public class KKPV2SCommand extends CommandHandlerChain{
         this.stationsList.clear();
         this.stationTimes.clear();
 
+        if (!arePricesDefined()) {
+            ConfigManager.getInstance().incrementErrorCount();
+            System.out.println("Greška br. " + ConfigManager.getInstance().getErrorCount() + ": Cijene za vlakove nisu definirane. Koristite komandu CVP za definiranje cijena.");
+            return;
+        }
+
         if (!validateInput(input)) {
             ConfigManager.getInstance().incrementErrorCount();
             System.out.println("Greška br. " + ConfigManager.getInstance().getErrorCount() + ": Neispravan format naredbe. Očekuje se format 'KKPV2S oznaka - polaznaStanica - odredišnaStanica - datum - načinKupovine'.");
@@ -65,6 +71,7 @@ public class KKPV2SCommand extends CommandHandlerChain{
         }
 
         double basePrice = calculateTicketPrice(polaznaStanica, odredisnaStanica, oznakaVlaka);
+        if (basePrice == 0) return;
         boolean isWeekend = datum.getDayOfWeek().getValue() >= 6;
 
         switch (nacinKupovine.toUpperCase()) {
@@ -143,7 +150,7 @@ public class KKPV2SCommand extends CommandHandlerChain{
             return 0;
         }
 
-        processTrainSchedule(train, polaznaStanica, odredisnaStanica);
+        if (!processTrainSchedule(train, polaznaStanica, odredisnaStanica)) return 0;
 
         String vrstaVlaka = train.getVrstaVlaka();
         double cijenaPoKilometru = switch (vrstaVlaka) {
@@ -156,10 +163,14 @@ public class KKPV2SCommand extends CommandHandlerChain{
         return cijenaPoKilometru * getLastDistanceFromStationsList();
     }
 
-    private void processTrainSchedule(Train train, String polaznaStanica, String odredisnaStanica) {
+    private boolean processTrainSchedule(Train train, String polaznaStanica, String odredisnaStanica) {
         int totalDistance = 0;
         boolean withinRange = false;
         boolean smjerValidan = false;
+
+        if (!checkTrainDirection(train, polaznaStanica, odredisnaStanica)) {
+            return false; // Prekida daljnje izvršavanje ako smjer nije valjan
+        }
 
         for (TimeTableComponent etapaComponent : train.getChildren()) {
             if (etapaComponent instanceof Etapa) {
@@ -247,6 +258,7 @@ public class KKPV2SCommand extends CommandHandlerChain{
                             int dodatneMinute = getVrijemeZaustavljanja(stations.get(i + 1), vrstaVlaka);
 
                             if (dodatneMinute == 0) {
+
                                 dodatneMinute = findNextStationTimeWithSameName(stations.get(i + 1), vrstaVlaka);
                             }
 
@@ -260,8 +272,10 @@ public class KKPV2SCommand extends CommandHandlerChain{
         if (!smjerValidan) {
             ConfigManager.getInstance().incrementErrorCount();
             System.out.println("Greška br. " + ConfigManager.getInstance().getErrorCount() + ": Vlak ne ide u smjeru između stanica " + polaznaStanica + " i " + odredisnaStanica + ".");
+            return false;
         }
-        checkTrainDirection(train, polaznaStanica, odredisnaStanica);
+        return true;
+
     }
 
     private int getVrijemeZaustavljanja(Station station, String vrstaVlaka) {
@@ -327,7 +341,7 @@ public class KKPV2SCommand extends CommandHandlerChain{
         return 0;
     }
 
-    private void checkTrainDirection(Train train, String polaznaStanica, String odredisnaStanica) {
+    private boolean checkTrainDirection(Train train, String polaznaStanica, String odredisnaStanica) {
         List<String> stationNames = new ArrayList<>();
 
         for (TimeTableComponent etapaComponent : train.getChildren()) {
@@ -349,13 +363,16 @@ public class KKPV2SCommand extends CommandHandlerChain{
         if (indexPolazna == -1 || indexOdredisna == -1) {
             ConfigManager.getInstance().incrementErrorCount();
             System.out.println("Greška br. " + ConfigManager.getInstance().getErrorCount() + ": Polazna ili odredišna stanica nije pronađena u vlaku.");
-            return;
+            return false; // Prekida ako stanice nisu pronađene
         }
 
         if (indexOdredisna < indexPolazna) {
             ConfigManager.getInstance().incrementErrorCount();
             System.out.println("Greška br. " + ConfigManager.getInstance().getErrorCount() + ": Vlak ne ide u tom smjeru između stanica " + polaznaStanica + " i " + odredisnaStanica + ".");
+            return false; // Prekida ako smjer nije ispravan
         }
+
+        return true; // Smjer je ispravan
     }
 
     private boolean isTravelAllowedForAllStages(Train train, LocalDate datum) {
@@ -381,7 +398,7 @@ public class KKPV2SCommand extends CommandHandlerChain{
                         .findFirst()
                         .orElse(null);
 
-                if (matchingDrivingDay == null || !matchingDrivingDay.getDays().contains(danUTjednu)) {
+                if (etapa.getOznakaDana() != null && (matchingDrivingDay == null || !matchingDrivingDay.getDays().contains(danUTjednu))) {
                     System.out.println("Greška: Vlak '" + train.getOznaka() +
                             "' ne putuje na odabran dan");
                     return false;
@@ -390,5 +407,10 @@ public class KKPV2SCommand extends CommandHandlerChain{
         }
 
         return true;
+    }
+
+    private boolean arePricesDefined() {
+        ConfigManager configManager = ConfigManager.getInstance();
+        return configManager.getTicketPrice() != null;
     }
 }

@@ -88,17 +88,17 @@ public class PSP2SCommand extends CommandHandlerChain {
                         for (StationComposite stationComposite : stationsInEtapa) {
                             if (stationComposite.getBrojKolosjeka() == 1) {
                                 stationComposite.setState(0, newState);
-                                System.out.println("Ažurirano stanje stanice: " + stationComposite.getNazivStanice() +
-                                        " na vlak " + train.getOznaka() + " (jedan kolosijek)");
+                                /*System.out.println("Ažurirano stanje stanice: " + stationComposite.getNazivStanice() +
+                                        " na vlak " + train.getOznaka() + " (jedan kolosijek)");*/
                             } else if (stationComposite.getBrojKolosjeka() == 2) {
                                 if (isNormalDirection) {
                                     stationComposite.setState(0, newState); // Normalni smjer
-                                    System.out.println("Ažurirano stanje stanice: " + stationComposite.getNazivStanice() +
-                                            " na vlak " + train.getOznaka() + " (prvi kolosijek)");
+                                    /*System.out.println("Ažurirano stanje stanice: " + stationComposite.getNazivStanice() +
+                                            " na vlak " + train.getOznaka() + " (prvi kolosijek)");*/
                                 } else {
                                     stationComposite.setState(1, newState); // Obrnuti smjer
-                                    System.out.println("Ažurirano stanje stanice: " + stationComposite.getNazivStanice() +
-                                            " na vlak " + train.getOznaka() + " (drugi kolosijek)");
+                                    /*System.out.println("Ažurirano stanje stanice: " + stationComposite.getNazivStanice() +
+                                            " na vlak " + train.getOznaka() + " (drugi kolosijek)");*/
                                 }
                             }
                             anyStationUpdated = true;

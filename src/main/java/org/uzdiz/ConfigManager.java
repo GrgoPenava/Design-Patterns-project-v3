@@ -34,7 +34,7 @@ public class ConfigManager {
     private List<TimeTable> timeTables = new ArrayList<>();
     private List<DrivingDays> drivingDays = new ArrayList<>();
     private List<User> users = new ArrayList<>();
-    private TicketPrice ticketPrice = new TicketPrice();
+    private TicketPrice ticketPrice = null;
 
     private TimeTableComposite vozniRed;
 
@@ -67,7 +67,9 @@ public class ConfigManager {
 
     public void setPricing(double cijenaNormalni, double cijenaUbrzani, double cijenaBrzi,
                            double popustSuN, double popustWebMob, double uvecanjeVlak) {
-
+        if (this.ticketPrice == null) {
+            this.ticketPrice = new TicketPrice();
+        }
         this.ticketPrice.cijenaNormalni = cijenaNormalni;
         this.ticketPrice.cijenaUbrzani = cijenaUbrzani;
         this.ticketPrice.cijenaBrzi = cijenaBrzi;

@@ -18,7 +18,7 @@ public class IKKPVCommand extends CommandHandlerChain {
 
         if (input.trim().equals("IKKPV")) {
             if (careTaker.getMementoList().isEmpty()) {
-                System.out.println("Nema spremljenih karata.");
+                System.out.println("Nema spremljenih karti.");
                 return;
             }
 

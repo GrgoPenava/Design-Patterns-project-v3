@@ -2,8 +2,7 @@ package org.uzdiz.timeTableComposite;
 
 import org.uzdiz.observer.Observer;
 import org.uzdiz.observer.Subject;
-import org.uzdiz.stationState.IspravnaState;
-import org.uzdiz.stationState.State;
+import org.uzdiz.stationState.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,8 +21,7 @@ public class StationComposite extends TimeTableComponent implements Subject {
         this.status = status;
         this.brojKolosjeka = brojKolosjeka;
         for (int i = 0; i < brojKolosjeka; i++) {
-            //TODO promijeniti
-            this.kolosijekStates.add(new IspravnaState());
+            this.kolosijekStates.add(this.getStateStatus(status));
         }
     }
 
@@ -90,6 +88,16 @@ public class StationComposite extends TimeTableComponent implements Subject {
 
     public boolean hasObserver(Observer observer) {
         return observers.contains(observer);
+    }
+
+    private State getStateStatus(String statusPruge) {
+        return switch (statusPruge) {
+            case "I" -> new IspravnaState();
+            case "K" -> new KvarState();
+            case "T" -> new TestiranjeState();
+            case "Z" -> new ZatvorenaState();
+            default -> new IspravnaState();
+        };
     }
 
 }

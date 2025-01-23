@@ -9,7 +9,9 @@ import org.uzdiz.timeTableComposite.Train;
 import org.uzdiz.utils.TableBuilder;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class IRPSCommand extends CommandHandlerChain {
 
@@ -35,6 +37,7 @@ public class IRPSCommand extends CommandHandlerChain {
 
         // Lista redaka za tablicu
         List<String[]> rows = new ArrayList<>();
+        Set<String> uniqueRelations = new HashSet<>(); // Za praćenje jedinstvenih relacija
 
         // Prolazak kroz vlakove i etape
         for (TimeTableComponent trainComponent : ConfigManager.getInstance().getVozniRed().getChildren()) {
@@ -47,6 +50,7 @@ public class IRPSCommand extends CommandHandlerChain {
                         }
 
                         boolean etapaHasStatus = false;
+                        List<StationComposite> stationsInEtapa = new ArrayList<>();
 
                         // Prolazak kroz sve stanice u etapi
                         for (TimeTableComponent stationComponent : etapa.getChildren()) {
@@ -56,23 +60,48 @@ public class IRPSCommand extends CommandHandlerChain {
                                     State currentState = stationComposite.getState(i);
                                     if (currentState != null && currentState.getStatus().equalsIgnoreCase(status)) {
                                         etapaHasStatus = true;
-                                        // Dodavanje retka u tablicu
-                                        rows.add(new String[]{
-                                                etapa.getOznakaPruge(),
-                                                train.getOznaka(),
-                                                stationComposite.getNazivStanice(),
-                                                "Kolosijek " + (i + 1),
-                                                currentState.getStatus()
-                                        });
+                                        stationsInEtapa.add(stationComposite);
                                     }
                                 }
                             }
                         }
 
-                        // Ako etapa sadrži barem jednu stanicu u traženom statusu, dodaje se u tablicu
+                        // Kreiranje relacija između stanica u etapi s odgovarajućim statusom
+                        for (int i = 0; i < stationsInEtapa.size() - 1; i++) {
+                            StationComposite currentStation = stationsInEtapa.get(i);
+                            StationComposite nextStation = stationsInEtapa.get(i + 1);
+
+                            // Provjera ako su stanice identične ili stanje Kvar je u obrnutom smjeru
+                            if (currentStation.getNazivStanice().equals(nextStation.getNazivStanice())) {
+                                continue;
+                            }
+
+                            String relation;
+                            if (isReverseDirection(currentStation, nextStation, status)) {
+                                if (etapa.getSmjer().equals("O")) {
+                                    relation = currentStation.getNazivStanice() + " - " + nextStation.getNazivStanice();
+                                } else {
+                                    relation = nextStation.getNazivStanice() + " - " + currentStation.getNazivStanice();
+                                }
+                            } else {
+                                relation = currentStation.getNazivStanice() + " - " + nextStation.getNazivStanice();
+                            }
+
+                            if (uniqueRelations.add(relation)) { // Provjera i dodavanje samo ako relacija ne postoji
+                                rows.add(new String[]{
+                                        etapa.getOznakaPruge(),
+                                        train.getOznaka(),
+                                        relation,
+                                        "Kolosijek " + (getKolosijekWithStatus(currentStation, nextStation, status)),
+                                        status
+                                });
+                            }
+                        }
+
+                        // Ako etapa sadrži barem jednu stanicu u traženom statusu
                         if (etapaHasStatus) {
-                            System.out.println("Etapa s oznakom '" + etapa.getOznakaPruge() +
-                                    "' sadrži stanice u statusu '" + status + "'.");
+                            /*System.out.println("Etapa s oznakom '" + etapa.getOznakaPruge() +
+                                    "' sadrži stanice u statusu '" + status + "'.");*/
                         }
                     }
                 }
@@ -85,7 +114,7 @@ public class IRPSCommand extends CommandHandlerChain {
                     (oznakaPruge != null ? " na pruzi '" + oznakaPruge + "'." : "."));
         } else {
             TableBuilder tableBuilder = new TableBuilder();
-            tableBuilder.setHeaders("Pruge", "Vlak", "Stanica", "Detalj kolosijeka", "Status");
+            tableBuilder.setHeaders("Pruge", "Vlak", "Relacija", "Detalj kolosijeka", "Status");
             rows.forEach(tableBuilder::addRow);
             tableBuilder.build();
         }
@@ -94,5 +123,25 @@ public class IRPSCommand extends CommandHandlerChain {
     private boolean validateInput(String input) {
         String regex = "^IRPS\\s+\\S+(\\s+\\S+)?$";
         return input.matches(regex);
+    }
+
+    private boolean isReverseDirection(StationComposite current, StationComposite next, String status) {
+        for (int i = 0; i < next.getBrojKolosjeka(); i++) {
+            State state = next.getState(i);
+            if (state != null && state.getStatus().equalsIgnoreCase(status)) {
+                return i != 0; // Obrnuti smjer ako je stanje u drugom kolosijeku
+            }
+        }
+        return false;
+    }
+
+    private int getKolosijekWithStatus(StationComposite current, StationComposite next, String status) {
+        for (int i = 0; i < current.getBrojKolosjeka(); i++) {
+            State state = current.getState(i);
+            if (state != null && state.getStatus().equalsIgnoreCase(status)) {
+                return i + 1;
+            }
+        }
+        return 1; // Default na prvi kolosijek ako nije specificirano
     }
 }
