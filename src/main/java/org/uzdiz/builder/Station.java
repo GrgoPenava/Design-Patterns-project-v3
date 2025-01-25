@@ -1,5 +1,7 @@
 package org.uzdiz.builder;
 
+import org.uzdiz.stationState.*;
+
 public class Station {
     private Integer id;
     private String naziv;
@@ -19,6 +21,25 @@ public class Station {
     private Integer vrijemeNormalniVlak;
     private Integer vrijemeUbrzaniVlak;
     private Integer vrijemeBrziVlak;
+    private State stateNormalni;
+    private State stateObrnuti;
+
+    public State getStateNormalni() {
+        return stateNormalni;
+    }
+
+    public void setStateNormalni(State stateNormalni) {
+        this.stateNormalni = stateNormalni;
+    }
+
+    public State getStateObrnuti() {
+        return stateObrnuti;
+    }
+
+    public void setStateObrnuti(State stateObrnuti) {
+        this.stateObrnuti = stateObrnuti;
+    }
+
 
     private Station(StationBuilder builder) {
         this.id = builder.id;
@@ -39,6 +60,8 @@ public class Station {
         this.vrijemeNormalniVlak = builder.vrijemeNormalniVlak;
         this.vrijemeUbrzaniVlak = builder.vrijemeUbrzaniVlak;
         this.vrijemeBrziVlak = builder.vrijemeBrziVlak;
+        this.stateNormalni = builder.stateNormalni;
+        this.stateObrnuti = builder.stateObrnuti;
     }
 
     public Integer getId() {
@@ -136,6 +159,8 @@ public class Station {
         private Integer vrijemeNormalniVlak;
         private Integer vrijemeUbrzaniVlak;
         private Integer vrijemeBrziVlak;
+        private State stateNormalni;
+        private State stateObrnuti;
 
         public StationBuilder setObavezniParametri(Integer id, String naziv, String oznakaPruge, String vrstaStanice,
                                                    String statusStanice, boolean putnici, boolean roba,
@@ -157,6 +182,8 @@ public class Station {
             this.DOPoDuznomM = DOPoDuznomM;
             this.statusPruge = statusPruge;
             this.duzina = duzina;
+            this.stateNormalni = createState(statusStanice);
+            this.stateObrnuti = createState(statusStanice);
             return this;
         }
 
@@ -173,6 +200,16 @@ public class Station {
         public StationBuilder setVrijemeBrziVlak(Integer vrijemeBrziVlak) {
             this.vrijemeBrziVlak = vrijemeBrziVlak;
             return this;
+        }
+
+        public State createState(String state) {
+            return switch (state) {
+                case "I" -> new IspravnaState();
+                case "K" -> new KvarState();
+                case "T" -> new TestiranjeState();
+                case "Z" -> new ZatvorenaState();
+                default -> new IspravnaState();
+            };
         }
 
         public Station build() {

@@ -5,6 +5,11 @@
 /Users/grgopenava/Programming/gpenava_zadaca_3/src/main/java/org/uzdiz/builder/Station.java
 /Users/grgopenava/Programming/gpenava_zadaca_3/src/main/java/org/uzdiz/builder/TimeTable.java
 /Users/grgopenava/Programming/gpenava_zadaca_3/src/main/java/org/uzdiz/builder/Vehicle.java
+/Users/grgopenava/Programming/gpenava_zadaca_3/src/main/java/org/uzdiz/command/Command.java
+/Users/grgopenava/Programming/gpenava_zadaca_3/src/main/java/org/uzdiz/command/CommandInvoker.java
+/Users/grgopenava/Programming/gpenava_zadaca_3/src/main/java/org/uzdiz/command/LeaveCommand.java
+/Users/grgopenava/Programming/gpenava_zadaca_3/src/main/java/org/uzdiz/command/Receiver.java
+/Users/grgopenava/Programming/gpenava_zadaca_3/src/main/java/org/uzdiz/command/SitCommand.java
 /Users/grgopenava/Programming/gpenava_zadaca_3/src/main/java/org/uzdiz/mediator/NOTCommand.java
 /Users/grgopenava/Programming/gpenava_zadaca_3/src/main/java/org/uzdiz/mediator/NotificationMediator.java
 /Users/grgopenava/Programming/gpenava_zadaca_3/src/main/java/org/uzdiz/mediator/NotificationMediatorImpl.java
@@ -70,5 +75,6 @@
 /Users/grgopenava/Programming/gpenava_zadaca_3/src/main/java/org/uzdiz/userInputChain/PKCommand.java
 /Users/grgopenava/Programming/gpenava_zadaca_3/src/main/java/org/uzdiz/userInputChain/PSP2SCommand.java
 /Users/grgopenava/Programming/gpenava_zadaca_3/src/main/java/org/uzdiz/userInputChain/SVVCommand.java
+/Users/grgopenava/Programming/gpenava_zadaca_3/src/main/java/org/uzdiz/userInputChain/SitLeaveHandler.java
 /Users/grgopenava/Programming/gpenava_zadaca_3/src/main/java/org/uzdiz/utils/GraphUtil.java
 /Users/grgopenava/Programming/gpenava_zadaca_3/src/main/java/org/uzdiz/utils/TableBuilder.java

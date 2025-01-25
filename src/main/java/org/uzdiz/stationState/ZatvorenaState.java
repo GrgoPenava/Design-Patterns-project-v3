@@ -13,4 +13,9 @@ public class ZatvorenaState implements State {
     public String getStatus() {
         return "Z"; // Zatvorena
     }
+
+    @Override
+    public String getStatusName() {
+        return "Zatvorena";
+    }
 }

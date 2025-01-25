@@ -13,4 +13,9 @@ public class KvarState implements State {
     public String getStatus() {
         return "K"; // Kvar
     }
+
+    @Override
+    public String getStatusName() {
+        return "Kvar";
+    }
 }

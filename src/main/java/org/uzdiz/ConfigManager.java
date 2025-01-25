@@ -7,6 +7,7 @@ import org.uzdiz.builder.Vehicle;
 import org.uzdiz.mediator.NotificationMediatorImpl;
 import org.uzdiz.memento.TicketCareTaker;
 import org.uzdiz.railwayFactory.Railway;
+import org.uzdiz.stationState.State;
 import org.uzdiz.timeTableComposite.*;
 import org.uzdiz.user.User;
 
@@ -210,4 +211,16 @@ public class ConfigManager {
     }
 
     public TicketPrice getTicketPrice() {return ticketPrice;}
+
+    public void setStationState(Integer id, Integer kolosjek, State newState) {
+        for (Station station : stations) {
+            if (station.getId().equals(id)) {
+                if (kolosjek == 0) {
+                    station.setStateNormalni(newState);
+                } else if (kolosjek == 1) {
+                    station.setStateObrnuti(newState);
+                }
+            }
+        }
+    }
 }

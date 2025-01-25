@@ -10,6 +10,7 @@ import org.uzdiz.timeTableComposite.Train;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class PSP2SCommand extends CommandHandlerChain {
@@ -88,15 +89,18 @@ public class PSP2SCommand extends CommandHandlerChain {
                         for (StationComposite stationComposite : stationsInEtapa) {
                             if (stationComposite.getBrojKolosjeka() == 1) {
                                 stationComposite.setState(0, newState);
+                                this.setStationState(stationComposite.getIdStanice(), 0, newState);
                                 /*System.out.println("Ažurirano stanje stanice: " + stationComposite.getNazivStanice() +
                                         " na vlak " + train.getOznaka() + " (jedan kolosijek)");*/
                             } else if (stationComposite.getBrojKolosjeka() == 2) {
-                                if (isNormalDirection) {
+                                if (!etapa.getSmjer().equals("O")) {
                                     stationComposite.setState(0, newState); // Normalni smjer
+                                    this.setStationState(stationComposite.getIdStanice(), 0, newState);
                                     /*System.out.println("Ažurirano stanje stanice: " + stationComposite.getNazivStanice() +
                                             " na vlak " + train.getOznaka() + " (prvi kolosijek)");*/
                                 } else {
                                     stationComposite.setState(1, newState); // Obrnuti smjer
+                                    this.setStationState(stationComposite.getIdStanice(), 1, newState);
                                     /*System.out.println("Ažurirano stanje stanice: " + stationComposite.getNazivStanice() +
                                             " na vlak " + train.getOznaka() + " (drugi kolosijek)");*/
                                 }
@@ -161,5 +165,9 @@ public class PSP2SCommand extends CommandHandlerChain {
             case "Z" -> new ZatvorenaState();
             default -> null;
         };
+    }
+
+    private void setStationState(Integer id, Integer kolosjek, State newState) {
+        ConfigManager.getInstance().setStationState(id, kolosjek, newState);
     }
 }

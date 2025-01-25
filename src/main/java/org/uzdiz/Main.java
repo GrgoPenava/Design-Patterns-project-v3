@@ -1,5 +1,6 @@
 package org.uzdiz;
 
+import org.uzdiz.command.Receiver;
 import org.uzdiz.mediator.NOTCommand;
 import org.uzdiz.readerFactory.*;
 import org.uzdiz.userInputChain.*;
@@ -113,6 +114,7 @@ public class Main {
     }
 
     private static CommandHandlerChain createCommandChain(ConfigManager configManager) {
+        Receiver receiver = new Receiver();
         CommandHandlerChain ipHandler = new IPCommand();
         CommandHandlerChain ispHandler = new ISPCommand();
         CommandHandlerChain isi2sHandler = new ISI2SCommand();
@@ -130,7 +132,8 @@ public class Main {
         CommandHandlerChain kkpv2sHandler = new KKPV2SCommand();
         CommandHandlerChain ikkpvHandler = new IKKPVCommand();
         CommandHandlerChain psp2sHandler = new PSP2SCommand();
-        CommandHandlerChain irpsHandlerHandler = new IRPSCommand();
+        CommandHandlerChain irpsHandler = new IRPSCommand();
+        CommandHandlerChain sitLeaveHandler = new SitLeaveHandler(receiver);
 
         ipHandler.setNextHandler(ispHandler);
         ispHandler.setNextHandler(isi2sHandler);
@@ -148,7 +151,8 @@ public class Main {
         notHandler.setNextHandler(kkpv2sHandler);
         kkpv2sHandler.setNextHandler(ikkpvHandler);
         ikkpvHandler.setNextHandler(psp2sHandler);
-        psp2sHandler.setNextHandler(irpsHandlerHandler);
+        psp2sHandler.setNextHandler(irpsHandler);
+        irpsHandler.setNextHandler(sitLeaveHandler);
 
         return ipHandler;
     }

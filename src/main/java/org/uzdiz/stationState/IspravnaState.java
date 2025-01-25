@@ -13,4 +13,9 @@ public class IspravnaState implements State {
     public String getStatus() {
         return "I"; // Ispravna
     }
+
+    @Override
+    public String getStatusName() {
+        return "Ispravna";
+    }
 }

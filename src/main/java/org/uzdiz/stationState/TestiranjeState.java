@@ -13,4 +13,9 @@ public class TestiranjeState implements State {
     public String getStatus() {
         return "T"; // Testiranje
     }
+
+    @Override
+    public String getStatusName() {
+        return "Testiranje";
+    }
 }

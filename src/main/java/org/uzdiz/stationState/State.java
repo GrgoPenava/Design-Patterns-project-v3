@@ -6,4 +6,6 @@ public interface State {
     void doAction(StationComposite station);
 
     String getStatus();
+
+    String getStatusName();
 }

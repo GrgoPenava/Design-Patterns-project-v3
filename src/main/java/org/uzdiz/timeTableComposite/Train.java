@@ -2,6 +2,7 @@ package org.uzdiz.timeTableComposite;
 
 import org.uzdiz.observer.Observer;
 import org.uzdiz.observer.Subject;
+import org.uzdiz.user.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.List;
 public class Train extends TimeTableComposite implements Subject {
     private String vrstaVlaka;
     private List<Observer> observers = new ArrayList<>();
+    private List<User> passengers = new ArrayList<>();
 
     public Train(String oznakaVlaka, String vrstaVlaka) {
         super(oznakaVlaka);
@@ -43,6 +45,22 @@ public class Train extends TimeTableComposite implements Subject {
 
     public boolean hasObserver(Observer observer) {
         return observers.contains(observer);
+    }
+
+    public boolean addPassenger(User user) {
+        if (!passengers.contains(user)) {
+            passengers.add(user);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean removePassenger(User user) {
+        return passengers.remove(user);
+    }
+
+    public List<User> getPassengers() {
+        return new ArrayList<>(passengers);
     }
 
 }
