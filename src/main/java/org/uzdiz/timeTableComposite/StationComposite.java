@@ -40,6 +40,9 @@ public class StationComposite extends TimeTableComponent implements Subject {
         return this.kolosijekStates.get(kolosijekIndex);
     }
 
+    public void setCurrentState(State state) {
+    }
+
     @Override
     public void showDetails() {
         System.out.println(nazivStanice);

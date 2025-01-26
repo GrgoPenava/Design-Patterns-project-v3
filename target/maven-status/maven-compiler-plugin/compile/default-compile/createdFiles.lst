@@ -26,6 +26,7 @@ org/uzdiz/builder/Station.class
 org/uzdiz/builder/TimeTable$TimeTableBuilder.class
 org/uzdiz/builder/Station$StationBuilder.class
 org/uzdiz/memento/TicketOriginator.class
+org/uzdiz/userInputChain/IVI2SCommand.class
 org/uzdiz/stationState/TestiranjeState.class
 org/uzdiz/builder/TimeTable.class
 org/uzdiz/userInputChain/IKKPVCommand.class

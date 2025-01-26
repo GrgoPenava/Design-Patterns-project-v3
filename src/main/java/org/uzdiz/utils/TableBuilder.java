@@ -62,5 +62,14 @@ public class TableBuilder {
         builder.append("|");
         System.out.println(builder.toString());
     }
+
+    public TableBuilder addEmptyRow() {
+        List<String> emptyRow = new ArrayList<>();
+        for (int i = 0; i < headers.size(); i++) {
+            emptyRow.add("");
+        }
+        rows.add(emptyRow);
+        return this;
+    }
 }
 
