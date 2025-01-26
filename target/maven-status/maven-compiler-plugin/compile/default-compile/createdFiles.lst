@@ -18,6 +18,7 @@ org/uzdiz/userInputChain/IEVDCommand.class
 org/uzdiz/mediator/NotificationMediator.class
 org/uzdiz/railwayFactory/LocalRailwayCreator.class
 org/uzdiz/userInputChain/ISI2SCommand.class
+org/uzdiz/userInputChain/UKP2SCommand.class
 org/uzdiz/railwayFactory/RegionalRailway.class
 org/uzdiz/userInputChain/SVVCommand$StationInfo.class
 org/uzdiz/userInputChain/KKPV2SCommand.class
@@ -42,6 +43,7 @@ org/uzdiz/timeTableComposite/StationComposite.class
 org/uzdiz/userInputChain/DPKCommand.class
 org/uzdiz/stationState/ZatvorenaState.class
 org/uzdiz/readerFactory/TimeTableReaderProduct.class
+org/uzdiz/userInputChain/UKP2SCommand$1.class
 org/uzdiz/builder/Composition.class
 org/uzdiz/builder/Vehicle$VehicleBuilder.class
 org/uzdiz/readerFactory/TimeTableReaderCreator.class

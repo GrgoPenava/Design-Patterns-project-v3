@@ -29,7 +29,6 @@ public class PSP2SCommand extends CommandHandlerChain {
             return;
         }
 
-        // Parsiranje ulaznog stringa
         String[] parts = input.substring(6).trim().split("\\s+-\\s+");
         String oznakaPruge = parts[0];
         String polaznaStanica = parts[1];
@@ -39,7 +38,6 @@ public class PSP2SCommand extends CommandHandlerChain {
         boolean etapaFound = false;
         boolean anyStationUpdated = false;
 
-        // Odredi stanje na temelju statusa
         State newState = determineState(status);
         if (newState == null) {
             ConfigManager.getInstance().incrementErrorCount();
@@ -48,12 +46,10 @@ public class PSP2SCommand extends CommandHandlerChain {
             return;
         }
 
-        // Dohvaćanje svih stanica s oznakom pruge iz globalnog popisa
         List<Station> stationsOnRailway = ConfigManager.getInstance().getStations().stream()
                 .filter(station -> oznakaPruge.equals(station.getOznakaPruge()))
                 .collect(Collectors.toList());
 
-        // Pronalazak indeksa polazne i odredišne stanice iz popisa svih stanica na toj pruzi
         int indexPolazna = findStationIndex(stationsOnRailway, polaznaStanica);
         int indexOdredisna = findStationIndex(stationsOnRailway, odredisnaStanica);
 
@@ -64,7 +60,6 @@ public class PSP2SCommand extends CommandHandlerChain {
             return;
         }
 
-        // Osiguravanje ispravnog redoslijeda
         boolean isNormalDirection = indexPolazna < indexOdredisna;
         if (!isNormalDirection) {
             int temp = indexPolazna;
@@ -74,10 +69,8 @@ public class PSP2SCommand extends CommandHandlerChain {
 
         List<Station> targetStations = stationsOnRailway.subList(indexPolazna, indexOdredisna + 1);
 
-        // Prolaz kroz sve vlakove
         for (TimeTableComponent trainComponent : ConfigManager.getInstance().getVozniRed().getChildren()) {
             if (trainComponent instanceof Train train) {
-                // Prolaz kroz sve etape vlaka
                 for (TimeTableComponent etapaComponent : train.getChildren()) {
                     if (etapaComponent instanceof Etapa etapa &&
                             etapa.getOznakaPruge().equals(oznakaPruge)) {
@@ -85,24 +78,19 @@ public class PSP2SCommand extends CommandHandlerChain {
                         etapaFound = true;
                         List<StationComposite> stationsInEtapa = getMatchingStations(etapa, targetStations);
 
-                        // Ažuriranje stanja stanica unutar trenutne etape
                         for (StationComposite stationComposite : stationsInEtapa) {
                             if (stationComposite.getBrojKolosjeka() == 1) {
                                 stationComposite.setState(0, newState);
                                 this.setStationState(stationComposite.getIdStanice(), 0, newState);
-                                /*System.out.println("Ažurirano stanje stanice: " + stationComposite.getNazivStanice() +
-                                        " na vlak " + train.getOznaka() + " (jedan kolosijek)");*/
+
                             } else if (stationComposite.getBrojKolosjeka() == 2) {
                                 if (!etapa.getSmjer().equals("O")) {
-                                    stationComposite.setState(0, newState); // Normalni smjer
+                                    stationComposite.setState(0, newState);
                                     this.setStationState(stationComposite.getIdStanice(), 0, newState);
-                                    /*System.out.println("Ažurirano stanje stanice: " + stationComposite.getNazivStanice() +
-                                            " na vlak " + train.getOznaka() + " (prvi kolosijek)");*/
+
                                 } else {
-                                    stationComposite.setState(1, newState); // Obrnuti smjer
+                                    stationComposite.setState(1, newState);
                                     this.setStationState(stationComposite.getIdStanice(), 1, newState);
-                                    /*System.out.println("Ažurirano stanje stanice: " + stationComposite.getNazivStanice() +
-                                            " na vlak " + train.getOznaka() + " (drugi kolosijek)");*/
                                 }
                             }
                             anyStationUpdated = true;
@@ -112,7 +100,6 @@ public class PSP2SCommand extends CommandHandlerChain {
             }
         }
 
-        // Ispisivanje poruka u konzolu na temelju rezultata
         if (!etapaFound) {
             ConfigManager.getInstance().incrementErrorCount();
             System.out.println("Greška br. " + ConfigManager.getInstance().getErrorCount() +

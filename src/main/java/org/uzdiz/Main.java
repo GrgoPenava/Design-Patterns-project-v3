@@ -134,6 +134,7 @@ public class Main {
         CommandHandlerChain psp2sHandler = new PSP2SCommand();
         CommandHandlerChain irpsHandler = new IRPSCommand();
         CommandHandlerChain sitLeaveHandler = new SitLeaveHandler(receiver);
+        CommandHandlerChain ukp2sLeaveHandler = new UKP2SCommand();
 
         ipHandler.setNextHandler(ispHandler);
         ispHandler.setNextHandler(isi2sHandler);
@@ -153,6 +154,7 @@ public class Main {
         ikkpvHandler.setNextHandler(psp2sHandler);
         psp2sHandler.setNextHandler(irpsHandler);
         irpsHandler.setNextHandler(sitLeaveHandler);
+        sitLeaveHandler.setNextHandler(ukp2sLeaveHandler);
 
         return ipHandler;
     }

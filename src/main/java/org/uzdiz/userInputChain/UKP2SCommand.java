@@ -3,41 +3,37 @@ package org.uzdiz.userInputChain;
 import org.uzdiz.ConfigManager;
 import org.uzdiz.DrivingDays;
 import org.uzdiz.builder.Station;
-import org.uzdiz.memento.TicketMemento;
-import org.uzdiz.memento.TicketOriginator;
-import org.uzdiz.memento.TicketPurchase;
+import org.uzdiz.memento.TicketDetails;
 import org.uzdiz.railwayFactory.Railway;
 import org.uzdiz.stationState.IspravnaState;
 import org.uzdiz.stationState.State;
-import org.uzdiz.strategy.BlagajnaStrategy;
 import org.uzdiz.strategy.PriceCalculationStrategy;
-import org.uzdiz.strategy.TrainStrategy;
 import org.uzdiz.strategy.WebMobileStrategy;
+import org.uzdiz.strategy.BlagajnaStrategy;
+import org.uzdiz.strategy.TrainStrategy;
 import org.uzdiz.timeTableComposite.*;
 import org.uzdiz.utils.TableBuilder;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-public class KKPV2SCommand extends CommandHandlerChain{
+public class UKP2SCommand extends CommandHandlerChain {
     private Map<Station, Integer> stationsList = new LinkedHashMap<>();
     private Map<String, String> stationTimes = new HashMap<>();
-    private Map<StationComposite, Integer> stationsList2 = new LinkedHashMap<>();
 
     @Override
     protected boolean canHandle(String input) {
-        return input.matches("^KKPV2S(\\s|$).*");
+        return input.matches("^UKP2S(\\s|$).*");
     }
 
     @Override
     protected void execute(String input) {
         this.stationsList.clear();
         this.stationTimes.clear();
-        this.stationsList2.clear();
 
         if (!arePricesDefined()) {
             ConfigManager.getInstance().incrementErrorCount();
@@ -47,25 +43,28 @@ public class KKPV2SCommand extends CommandHandlerChain{
 
         if (!validateInput(input)) {
             ConfigManager.getInstance().incrementErrorCount();
-            System.out.println("Greška br. " + ConfigManager.getInstance().getErrorCount() + ": Neispravan format naredbe. Očekuje se format 'KKPV2S oznaka - polaznaStanica - odredišnaStanica - datum - načinKupovine'.");
+            System.out.println("Greška br. " + ConfigManager.getInstance().getErrorCount() +
+                    ": Neispravan format naredbe. Očekuje se format " +
+                    "'UKP2S polaznaStanica - odredišnaStanica - datum - odVr - doVr - načinKupovine'.");
             return;
         }
 
-        String regex = "^KKPV2S\\s+(\\S+)\\s+-\\s+(.+?)\\s+-\\s+(.+?)\\s+-\\s+(\\d{2}\\.\\d{2}\\.\\d{4}\\.)\\s+-\\s+(\\S+)$";
-        Pattern pattern = java.util.regex.Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(input);
+        String[] parts = input.split("\\s+-\\s+");
+        String polaznaStanica = parts[0].substring(6).trim();
+        String odredisnaStanica = parts[1].trim();
+        String datumStr = parts[2].trim();
+        String odVrijeme = parts[3].trim();
+        String doVrijeme = parts[4].trim();
+        String nacinKupovine = parts[5].trim();
 
-        if (!matcher.matches()) {
+        try {
+            LocalTime vrijemeOd2 = parseTime(odVrijeme);
+            LocalTime vrijemeDo2 = parseTime(doVrijeme);
+        } catch (DateTimeParseException e) {
             ConfigManager.getInstance().incrementErrorCount();
-            System.out.println("Greška br. " + ConfigManager.getInstance().getErrorCount() + ": Neispravan format naredbe.");
+            System.out.println("Greška br. " + ConfigManager.getInstance().getErrorCount() + ": Neispravan format vremena polaska ili dolaska.");
             return;
         }
-
-        String oznakaVlaka = matcher.group(1);
-        String polaznaStanica = matcher.group(2).trim();
-        String odredisnaStanica = matcher.group(3).trim();
-        String datumStr = matcher.group(4);
-        String nacinKupovine = matcher.group(5);
 
         LocalDate datum;
         try {
@@ -75,66 +74,123 @@ public class KKPV2SCommand extends CommandHandlerChain{
             System.out.println("Greška br. " + ConfigManager.getInstance().getErrorCount() + ": Neispravan format datuma. Očekuje se 'dd.MM.yyyy.'");
             return;
         }
-
-        double basePrice = calculateTicketPrice(polaznaStanica, odredisnaStanica, oznakaVlaka);
-        if (basePrice == 0) return;
         boolean isWeekend = datum.getDayOfWeek().getValue() >= 6;
 
-        switch (nacinKupovine.toUpperCase()) {
-            case "WM":
-                PriceCalculationStrategy webStrategy = new WebMobileStrategy();
-                handleTicketPurchase(webStrategy, oznakaVlaka, polaznaStanica, odredisnaStanica, datum, basePrice, isWeekend, nacinKupovine);
-                break;
-            case "B":
-                PriceCalculationStrategy counterStrategy = new BlagajnaStrategy();
-                handleTicketPurchase(counterStrategy, oznakaVlaka, polaznaStanica, odredisnaStanica, datum, basePrice, isWeekend, nacinKupovine);
-                break;
-            case "V":
-                PriceCalculationStrategy trainStrategy = new TrainStrategy();
-                handleTicketPurchase(trainStrategy, oznakaVlaka, polaznaStanica, odredisnaStanica, datum, basePrice, isWeekend, nacinKupovine);
-                break;
-            default:
-                ConfigManager.getInstance().incrementErrorCount();
-                System.out.println("Greška br. " + ConfigManager.getInstance().getErrorCount() + ": Nepoznat način kupovine karte: " + nacinKupovine);
+        TimeTableComposite vozniRed = ConfigManager.getInstance().getVozniRed();
+
+        if (vozniRed == null || vozniRed.getChildren().isEmpty()) {
+            ConfigManager.getInstance().incrementErrorCount();
+            System.out.println("Greška br. " + ConfigManager.getInstance().getErrorCount() + ": Nema dostupnih podataka o voznom redu.");
+            return;
+        }
+
+        for (TimeTableComponent component : vozniRed.getChildren()) {
+            if (component instanceof Train) {
+                String oznakaVlaka = ((Train) component).getOznaka();
+
+
+                double basePrice = calculateTicketPrice(polaznaStanica, odredisnaStanica, oznakaVlaka);
+                if (basePrice == 0) continue;
+
+                switch (nacinKupovine.toUpperCase()) {
+                    case "WM":
+                        PriceCalculationStrategy webStrategy = new WebMobileStrategy();
+                        handleTicketPurchase(webStrategy, oznakaVlaka, polaznaStanica, odredisnaStanica, datum, basePrice, isWeekend, nacinKupovine, odVrijeme, doVrijeme);
+                        break;
+                    case "B":
+                        PriceCalculationStrategy counterStrategy = new BlagajnaStrategy();
+                        handleTicketPurchase(counterStrategy, oznakaVlaka, polaznaStanica, odredisnaStanica, datum, basePrice, isWeekend, nacinKupovine, odVrijeme, doVrijeme);
+                        break;
+                    case "V":
+                        PriceCalculationStrategy trainStrategy = new TrainStrategy();
+                        handleTicketPurchase(trainStrategy, oznakaVlaka, polaznaStanica, odredisnaStanica, datum, basePrice, isWeekend, nacinKupovine, odVrijeme, doVrijeme);
+                        break;
+                    default:
+                        ConfigManager.getInstance().incrementErrorCount();
+                        System.out.println("Greška br. " + ConfigManager.getInstance().getErrorCount() + ": Nepoznat način kupovine karte: " + nacinKupovine);
+                }
+            }
         }
     }
 
-    private void handleTicketPurchase(PriceCalculationStrategy strategy, String oznakaVlaka, String polaznaStanica, String odredisnaStanica, LocalDate datum, double basePrice, boolean isWeekend, String nacinKupovine) {
+    private void handleTicketPurchase(PriceCalculationStrategy strategy, String oznakaVlaka, String polaznaStanica, String odredisnaStanica, LocalDate datum, double basePrice, boolean isWeekend, String nacinKupovine, String vrijemeOd, String vrijemeDo) {
         Train train = findTrainByOznaka(ConfigManager.getInstance().getVozniRed(), oznakaVlaka);
 
         if (!isTravelAllowedForAllStages(train, datum)) {
             return;
         }
 
-        TicketOriginator originator = new TicketOriginator();
-        TicketPurchase purchase = new TicketPurchase(strategy, originator);
+        double finalPrice = strategy.calculatePrice(basePrice, isWeekend);
+        double popustIznos = 0;
 
-        purchase.purchaseTicket(oznakaVlaka, polaznaStanica, odredisnaStanica, datum, basePrice, isWeekend, nacinKupovine, stationTimes.get("polazak"), stationTimes.get("dolazak"));
-        TicketMemento memento = ConfigManager.getInstance().getTicketCareTaker().getLastMemento();
-
-        if (memento != null) {
-            TableBuilder table = new TableBuilder();
-            table.setHeaders("Redni broj", "Oznaka vlaka", "Polazna stanica", "Odredišna stanica", "Datum", "Način kupovine", "Izvorna cijena", "Popust", "Konačna cijena", "Vrijeme polaska", "Vrijeme dolaska", "Vrijeme kupovine");
-            table.addRow(
-                    "1",
-                    memento.getTicketDetails().getTicketOznakaVlaka(),
-                    memento.getTicketDetails().getPolaznaStanica(),
-                    memento.getTicketDetails().getOdredisnaStanica(),
-                    memento.getTicketDetails().getDatum().toString(),
-                    memento.getTicketDetails().getNacinKupovine(),
-                    String.format("%.2f", memento.getTicketDetails().getIzvornaCijena()),
-                    String.format("%.2f", memento.getTicketDetails().getPopustiIznos()),
-                    String.format("%.2f", memento.getTicketDetails().getKonacnaCijena()),
-                    memento.getTicketDetails().getVrijemePolaska(),
-                    memento.getTicketDetails().getVrijemeDolaska(),
-                    memento.getTicketDetails().getVrijemeKupovineKarte()
-            );
-            table.build();
+        if (finalPrice < basePrice) {
+            popustIznos = basePrice - finalPrice;
         }
+
+        try {
+            LocalTime vrijemePolaska = parseTime(stationTimes.get("polazak"));
+            LocalTime vrijemeDolaska = parseTime(stationTimes.get("dolazak"));
+            LocalTime vrijemeOd2 = parseTime(vrijemeOd);
+            LocalTime vrijemeDo2 = parseTime(vrijemeDo);
+
+            if (vrijemePolaska.isBefore(vrijemeOd2) || vrijemeDolaska.isAfter(vrijemeDo2)) {
+                return;
+            }
+        } catch (DateTimeParseException e) {
+            ConfigManager.getInstance().incrementErrorCount();
+            System.out.println("Greška br. " + ConfigManager.getInstance().getErrorCount() + ": Neispravan format vremena polaska ili dolaska.");
+            return;
+        }
+
+        String vrijemeKupovineKarte = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm"));
+        TicketDetails ticketDetails = new TicketDetails(
+                oznakaVlaka,
+                polaznaStanica,
+                odredisnaStanica,
+                datum,
+                nacinKupovine,
+                basePrice,
+                stationTimes.get("polazak"),
+                stationTimes.get("dolazak"),
+                vrijemeKupovineKarte,
+                popustIznos,
+                finalPrice
+        );
+
+        TableBuilder table = new TableBuilder();
+        table.setHeaders(
+                "Vlak",
+                "Polazna stanica",
+                "Odredišna stanica",
+                "Datum",
+                "Način kupovine",
+                "Vrijeme polaska",
+                "Vrijeme dolaska",
+                "Izvorna cijena",
+                "Popust",
+                "Konačna cijena"
+        );
+
+        table.addRow(
+                ticketDetails.getTicketOznakaVlaka(),
+                ticketDetails.getPolaznaStanica(),
+                ticketDetails.getOdredisnaStanica(),
+                ticketDetails.getDatum().toString(),
+                ticketDetails.getNacinKupovine(),
+                ticketDetails.getVrijemePolaska(),
+                ticketDetails.getVrijemeDolaska(),
+                String.format("%.2f", ticketDetails.getIzvornaCijena()),
+                String.format("%.2f", ticketDetails.getPopustiIznos()),
+                String.format("%.2f", ticketDetails.getKonacnaCijena())
+        );
+
+        table.build();
+        System.out.println();
+        System.out.println();
     }
 
     private boolean validateInput(String input) {
-        String regex = "^KKPV2S\\s+\\S+\\s+-\\s+.+?\\s+-\\s+.+?\\s+-\\s+\\d{2}\\.\\d{2}\\.\\d{4}\\.\\s+-\\s+\\S+$";
+        String regex = "^UKP2S\\s+.+?\\s+-\\s+.+?\\s+-\\s+\\d{2}\\.\\d{2}\\.\\d{4}\\.\\s+-\\s+\\d{1,2}:\\d{2}\\s+-\\s+\\d{1,2}:\\d{2}\\s+-\\s+\\S+$";
         return input.matches(regex);
     }
 
@@ -151,12 +207,8 @@ public class KKPV2SCommand extends CommandHandlerChain{
         Train train = findTrainByOznaka(vozniRed, oznakaVlaka);
 
         if (train == null) {
-            config.incrementErrorCount();
-            System.out.println("Greška br. " + config.getErrorCount() + ": Vlak s oznakom '" + oznakaVlaka + "' nije pronađen.");
             return 0;
         }
-
-        if (!processTrainSchedule2(train, polaznaStanica, odredisnaStanica)) return 0;
 
         if (!processTrainSchedule(train, polaznaStanica, odredisnaStanica)) return 0;
 
@@ -188,8 +240,6 @@ public class KKPV2SCommand extends CommandHandlerChain{
 
                 Railway railway = ConfigManager.getInstance().getRailwayByOznakaPruge(oznakaPruge);
                 if (railway == null) {
-                    ConfigManager.getInstance().incrementErrorCount();
-                    System.out.println("Greška br. " + ConfigManager.getInstance().getErrorCount() + ": Pruga s oznakom '" + oznakaPruge + "' nije pronađena.");
                     continue;
                 }
 
@@ -198,8 +248,6 @@ public class KKPV2SCommand extends CommandHandlerChain{
                 int endIndex = findStationIndex(stations, etapa.getOdredisnaStanica());
 
                 if (startIndex == -1 || endIndex == -1) {
-                    ConfigManager.getInstance().incrementErrorCount();
-                    System.out.println("Greška br. " + ConfigManager.getInstance().getErrorCount() + ": Stanice etape nisu pronađene na pruzi '" + oznakaPruge + "'.");
                     continue;
                 }
                 boolean isNormalDirection = startIndex < endIndex;
@@ -223,7 +271,6 @@ public class KKPV2SCommand extends CommandHandlerChain{
                         if (withinRange) {
                             this.stationsList.put(station, totalDistance);
                         }
-
 
                         if (station.getNaziv().equals(odredisnaStanica)) {
                             withinRange = false;
@@ -250,14 +297,12 @@ public class KKPV2SCommand extends CommandHandlerChain{
                         if (station.getNaziv().equals(polaznaStanica)) {
                             withinRange = true;
                             totalDistance = 0;
-                            System.out.println("SS2 -" + station.getNaziv());
                             stationTimes.put("polazak", currentTime);
                         }
 
                         if (withinRange) {
                             this.stationsList.put(station, totalDistance);
                         }
-
 
                         if (station.getNaziv().equals(odredisnaStanica)) {
                             withinRange = false;
@@ -286,61 +331,10 @@ public class KKPV2SCommand extends CommandHandlerChain{
         }
 
         if (!smjerValidan) {
-            ConfigManager.getInstance().incrementErrorCount();
-            System.out.println("Greška br. " + ConfigManager.getInstance().getErrorCount() + ": Vlak ne ide u smjeru između stanica " + polaznaStanica + " i " + odredisnaStanica + ".");
             return false;
         }
         return true;
 
-    }
-
-    private boolean processTrainSchedule2(Train train, String polaznaStanica, String odredisnaStanica) {
-        int totalDistance = 0;
-        boolean withinRange = false;
-        StationComposite previousStation = null;
-
-        for (TimeTableComponent etapaComponent : train.getChildren()) {
-            if (etapaComponent instanceof Etapa etapa) {
-                List<StationComposite> stations = getStationComposites(etapa);
-
-                for (StationComposite currentStation : stations) {
-                    if (currentStation.getNazivStanice().equals(polaznaStanica)) {
-                        withinRange = true;
-                        totalDistance = 0;
-                        stationTimes.put("polazak", etapa.getVrijemePolaska());
-                    }
-
-                    if (withinRange) {
-                        if (previousStation != null) {
-                            State previousState = previousStation.getState(0);
-                            State currentState = currentStation.getState(0);
-
-                            if (previousState != null && currentState != null) {
-                                if (!(previousState instanceof IspravnaState) &&
-                                        !(currentState instanceof IspravnaState) &&
-                                        previousState.getStatus().equalsIgnoreCase(currentState.getStatus())) {
-                                    System.out.println("Relacija '" + previousStation.getNazivStanice() + " - " +
-                                            currentStation.getNazivStanice() + "' je u stanju '" + currentState.getStatus() +
-                                            "'. Nije moguće kupiti kartu.");
-                                    return false;
-                                }
-                            }
-                        }
-
-                        previousStation = currentStation;
-                        stationsList2.put(currentStation, totalDistance);
-                    }
-
-                    if (currentStation.getNazivStanice().equals(odredisnaStanica)) {
-                        withinRange = false;
-                        stationTimes.put("dolazak", etapa.getVrijemePolaska());
-                        break;
-                    }
-                }
-            }
-        }
-
-        return true;
     }
 
     private int getLastDistanceFromStationsList() {
@@ -426,14 +420,10 @@ public class KKPV2SCommand extends CommandHandlerChain{
         int indexOdredisna = stationNames.indexOf(odredisnaStanica);
 
         if (indexPolazna == -1 || indexOdredisna == -1) {
-            ConfigManager.getInstance().incrementErrorCount();
-            System.out.println("Greška br. " + ConfigManager.getInstance().getErrorCount() + ": Polazna ili odredišna stanica nije pronađena u vlaku.");
             return false;
         }
 
         if (indexOdredisna < indexPolazna) {
-            ConfigManager.getInstance().incrementErrorCount();
-            System.out.println("Greška br. " + ConfigManager.getInstance().getErrorCount() + ": Vlak ne ide u tom smjeru između stanica " + polaznaStanica + " i " + odredisnaStanica + ".");
             return false;
         }
 
@@ -461,8 +451,6 @@ public class KKPV2SCommand extends CommandHandlerChain{
                         .orElse(null);
 
                 if (etapa.getOznakaDana() != null && (matchingDrivingDay == null || !matchingDrivingDay.getDays().contains(danUTjednu))) {
-                    System.out.println("Greška: Vlak '" + train.getOznaka() +
-                            "' ne putuje na odabran dan");
                     return false;
                 }
             }
@@ -480,8 +468,6 @@ public class KKPV2SCommand extends CommandHandlerChain{
         Train train = findTrainByOznaka(ConfigManager.getInstance().getVozniRed(), oznakaVlaka);
 
         if (train == null) {
-            ConfigManager.getInstance().incrementErrorCount();
-            System.out.println("Greška br. " + ConfigManager.getInstance().getErrorCount() + ": Vlak s oznakom '" + oznakaVlaka + "' nije pronađen.");
             return false;
         }
 
@@ -508,7 +494,6 @@ public class KKPV2SCommand extends CommandHandlerChain{
                         }
 
                         if (!(stateToCheck instanceof IspravnaState)) {
-                            System.out.println("Stanica '" + station.getNazivStanice() + "' je u stanju '" + stateToCheck.getStatus() + "'. Nije moguće kupiti kartu.");
                             return false;
                         }
                     }
@@ -530,5 +515,17 @@ public class KKPV2SCommand extends CommandHandlerChain{
             }
         }
         return stationComposites;
+    }
+
+    private LocalTime parseTime(String timeStr) {
+        try {
+            return LocalTime.parse(timeStr, DateTimeFormatter.ofPattern("HH:mm"));
+        } catch (DateTimeParseException e1) {
+            try {
+                return LocalTime.parse(timeStr, DateTimeFormatter.ofPattern("H:mm"));
+            } catch (DateTimeParseException e2) {
+                throw new DateTimeParseException("Neispravan format vremena: " + timeStr, timeStr, 0);
+            }
+        }
     }
 }

@@ -22,7 +22,6 @@ public class IRPSCommand extends CommandHandlerChain {
 
     @Override
     protected void execute(String input) {
-        // Validacija ulaznog formata
         if (!validateInput(input)) {
             ConfigManager.getInstance().incrementErrorCount();
             System.out.println("Greška br. " + ConfigManager.getInstance().getErrorCount() +
@@ -37,7 +36,6 @@ public class IRPSCommand extends CommandHandlerChain {
         List<String[]> rows = new ArrayList<>();
         Set<String> uniqueRelations = new HashSet<>();
 
-        // Prolazak kroz vlakove i etape
         for (TimeTableComponent trainComponent : ConfigManager.getInstance().getVozniRed().getChildren()) {
             if (trainComponent instanceof Train train) {
                 for (TimeTableComponent etapaComponent : train.getChildren()) {
@@ -59,13 +57,11 @@ public class IRPSCommand extends CommandHandlerChain {
 
                             boolean isReverse = isReverseDirection(currentStation, status);
 
-                            // Provjeravamo stanje za trenutnu relaciju
                             State currentState = isReverse
                                     ? currentStation.getState(1) // Obrnuti smjer
                                     : currentStation.getState(0); // Normalni smjer
 
                             if (currentState != null && currentState.getStatus().equalsIgnoreCase(status)) {
-                                // Konstrukcija relacije
                                 String relation = isReverse
                                         ? nextStation.getNazivStanice() + " - " + currentStation.getNazivStanice() // Obrnuti smjer
                                         : currentStation.getNazivStanice() + " - " + nextStation.getNazivStanice(); // Normalni smjer
@@ -86,7 +82,6 @@ public class IRPSCommand extends CommandHandlerChain {
             }
         }
 
-        // Generiranje i ispis tablice
         if (rows.isEmpty()) {
             System.out.println("Nema rezultata za status '" + status + "'" +
                     (oznakaPruge != null ? " na pruzi '" + oznakaPruge + "'." : "."));
@@ -105,16 +100,16 @@ public class IRPSCommand extends CommandHandlerChain {
 
     private boolean isReverseDirection(StationComposite station, String status) {
         if (station.getBrojKolosjeka() == 2) {
-            State reverseState = station.getState(1); // Stanje za obrnuti smjer
+            State reverseState = station.getState(1);
             return reverseState != null && reverseState.getStatus().equalsIgnoreCase(status);
         }
-        return false; // Ako je broj kolosijeka 1, smjer nije obrnut
+        return false;
     }
 
     private int getKolosijekWithStatus(StationComposite station, String status, boolean isReverse) {
         if (station.getBrojKolosjeka() == 2) {
             return isReverse ? 2 : 1; // Obrnuti smjer => kolosijek 2, normalan smjer => kolosijek 1
         }
-        return 1; // Ako je broj kolosijeka 1, uvijek je kolosijek 1
+        return 1;
     }
 }
